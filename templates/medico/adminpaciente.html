@@ -1,0 +1,67 @@
+{% extends '/medico/basemedico.html' %}
+
+
+{% block title %} Menú pacientes {% endblock %}
+
+{% block body %}
+
+<div class="container">
+	<h3>Administrar paciente</h3>
+	<hr>
+	<p>Seleccione una opción</p>
+</div>
+<div class="container">
+	<center>
+	<table>
+		<tbody>
+			<tr>
+			<td><img src="{{url_for('static', filename='add.png')}}" alt="add" style="width:128px;height:128px;"></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><img src="{{url_for('static', filename='magnifying-glass.png')}}" alt="search" style="width:128px;height:128px;"></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><img src="{{url_for('static', filename='change.png')}}" alt="change" style="width:128px;height:128px;"></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><img src="{{url_for('static', filename='delete.png')}}" alt="delete" style="width:128px;height:128px;"></td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<td><a href="{{url_for('altapaciente')}}"><button type="submit" value="Añadir paciente" class="btn btn-success">Añadir paciente</button></a></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><a href="{{url_for('consultapaciente')}}"><button type="submit" value="Consultar paciente" class="btn btn-success">Consultar paciente</button></a></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><a href="{{url_for('cambiopaciente')}}"><button type="submit" value="Modificar paciente" class="btn btn-success">Modificar paciente</button></a></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><a href="{{url_for('bajapaciente')}}"><button type="submit" value="Eliminar paciente" class="btn btn-success">Eliminar paciente</button></a></td>
+			</tr>
+		</tbody>
+	</table> 
+	</center> 	
+</div>
+
+{% endblock %}

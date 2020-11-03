@@ -1,0 +1,69 @@
+{% extends '/admin/baseadmin.html' %}
+
+
+{% block title %} Menú principal {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Página de inicio</h1>
+	<h2>USUARIO ADMINISTRADOR</h2>
+	<h3>Bienvenido {{name}}</h3>
+	<hr>
+	<p>Seleccione una opción</p>
+</div>
+<div class="container">
+	<center>
+	<table>
+		<tbody>
+			<tr>
+			<td><img src="{{url_for('static', filename='add.png')}}" alt="add" style="width:128px;height:128px;"></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><img src="{{url_for('static', filename='magnifying-glass.png')}}" alt="search" style="width:128px;height:128px;"></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><img src="{{url_for('static', filename='change.png')}}" alt="change" style="width:128px;height:128px;"></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><img src="{{url_for('static', filename='delete.png')}}" alt="delete" style="width:128px;height:128px;"></td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<td><a href="{{url_for('altamedico')}}"><button type="submit" value="Añadir médico" class="btn btn-success">Añadir médico</button></a></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><a href="{{url_for('consultamedico')}}"><button type="submit" value="Consultar médico" class="btn btn-success">Consultar médico</button></a></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><a href="{{url_for('cambiomedico')}}"><button type="submit" value="Modificar médico" class="btn btn-success">Modificar médico</button></a></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td><a href="{{url_for('bajamedico')}}"><button type="submit" value="Eliminar médico" class="btn btn-success">Eliminar médico</button></a></td>
+			</tr>
+		</tbody>
+	</table> 
+	</center> 	
+</div>
+
+{% endblock %}

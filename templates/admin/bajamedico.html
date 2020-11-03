@@ -1,0 +1,68 @@
+{% extends '/admin/baseadmin.html' %}
+{% block title %} Baja de médico {% endblock %}
+{% block body %}
+
+<div class="container">
+    <h1>Registro de usuarios médicos</h1>
+    <hr>
+	<p>Por favor seleccione el médico a dar de baja en la plataforma</p>
+</div>
+<div class="container">
+	{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+       <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">X</span>
+        </button>
+             {{message}}
+    </div>
+    {% endfor  %}
+    {% endif %}
+    {% endwith %}
+<div class="container">
+	<div class="table-responsive-md">
+		<center>
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col" class="align-middle" style="text-align: center;display:none;">idpersona</th>
+						<th scope="col" class="align-middle" style="text-align: center;display:none;">idusuario</th>
+						<th scope="col" class="align-middle" style="text-align: center;display:none;">idmedico</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Nombre</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Apellido Paterno</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Apellido Materno</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Número de Cédula</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Especialidad</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Correo electrónico</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Ciudad</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Nombre de usuario</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in data %}
+					<tr>
+						<td class="align-middle" style="text-align: center; display:none;">{{item[8]}}</td>
+						<td class="align-middle" style="text-align: center; display:none;">{{item[9]}}</td>
+						<td class="align-middle" style="text-align: center; display:none;">{{item[10]}}</td>
+					    <td class="align-middle" style="text-align: center;">{{item[0]}}</td>
+					    <td class="align-middle" style="text-align: center;">{{item[1]}}</td>
+				    	<td class="align-middle" style="text-align: center;">{{item[2]}}</td>
+				    	<td class="align-middle" style="text-align: center;">{{item[3]}}</td>
+				    	<td class="align-middle" style="text-align: center;">{{item[4]}}</td>
+				    	<td class="align-middle" style="text-align: center;">{{item[5]}}</td>
+				    	<td class="align-middle" style="text-align: center;">{{item[6]}}</td>
+				    	<td class="align-middle" style="text-align: center;">{{item[7]}}</td>
+				    	<td class="align-middle" style="text-align: center;">
+				    		<a href="deleteMedico/{{item[8]}}/{{item[9]}}/{{item[10]}}" class="btn btn-danger btn-xs" onclick="return confirm('¿Está seguro de eliminar este registro?')">Eliminar</a>
+
+				    	</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+				</table>
+			</center>
+	</div>
+</div>
+{% endblock %}

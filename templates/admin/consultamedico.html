@@ -1,0 +1,49 @@
+{% extends '/admin/baseadmin.html' %}
+
+
+{% block title %} Consulta de médicos {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Registro de usuarios médicos</h1>
+    <hr>
+	<p>Los medicos registrados aparecerán aquí</p>
+</div>
+
+<div class="container">
+    <div class="table-responsive-md">
+    <center>
+    <table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle" style="text-align: center;">Nombre</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Apellido Paterno</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Apellido Materno</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Número de Cédula</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Especialidad</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Correo electrónico</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Ciudad</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Nombre de usuario</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            <td class="align-middle" style="text-align: center;">{{item[0]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[1]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[2]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[3]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[4]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[5]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[6]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[7]}}</td>
+        </tr><br>
+    {% endfor %}
+    </tbody>
+    </table>
+    </center>
+    </div>
+</div>
+
+{% endblock %}

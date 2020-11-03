@@ -1,0 +1,205 @@
+{% extends '/medico/basemedico.html' %}
+{% block title %} Registro de nota médica {% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Registro de pacientes</h1>
+    <hr>
+	<p>Por favor ingrese los datos de la nota correspondiente al paciente seleccionado.</p>
+</div>
+    <center>
+<div class="container">
+	{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+       <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">X</span>
+        </button>
+             {{message}}
+    </div>
+    {% endfor  %}
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post" novalidate>
+    {{form.csrf_token}}
+    <div class="dcf-overflow-x-auto">
+    <table class="dcf-table dcf-table-bordered dcf-table-striped">
+      <tbody>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Datos de nota médica<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.resumenInterrogatorio.label}}</b></td>
+          <td class="dcf-txt-center"> {{form.resumenInterrogatorio(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center"> {% for error in form.resumenInterrogatorio.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center">  <b>{{form.planotratamiento.label}}</b></td>
+          <td class="dcf-txt-center">    {{form.planotratamiento(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">    {% for error in form.planotratamiento.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center">  <b>{{form.pronostico.label}}</b></td>
+          <td class="dcf-txt-center">  {{form.pronostico(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">  {% for error in form.pronostico.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>      
+          <td class="dcf-txt-center"><b>{{form.exploracion.label}}</b></td>
+          <td class="dcf-txt-center">{{form.exploracion(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center"> {% for error in form.exploracion.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.resultado.label}}</b></td>
+          <td class="dcf-txt-center">{{form.resultado(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.resultado.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.diagnostico.label}}</b></td>
+          <td class="dcf-txt-center">{{form.diagnostico(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.diagnostico.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.edomental.label}}</b></td>
+          <td class="dcf-txt-center">   {{form.edomental(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.edomental.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.fecha.label}}</b></td>
+          <td class="dcf-txt-center">{{form.fecha(size=10,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.fecha.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Signos vitales<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.peso.label}}</b></td>
+          <td class="dcf-txt-center">{{form.peso(size=4,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.peso.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.talla.label}}</b></td>
+          <td class="dcf-txt-center">{{form.talla(size=4,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.talla.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.tension.label}}</b></td>
+          <td class="dcf-txt-center">{{form.tension(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.tension.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.frecuenciaCardiaca.label}}</b></td>
+          <td class="dcf-txt-center">{{form.frecuenciaCardiaca(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.frecuenciaCardiaca.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.frecuenciaRespiratoria.label}}</b></td>
+          <td class="dcf-txt-center">{{form.frecuenciaRespiratoria(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.frecuenciaRespiratoria.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.temperatura.label}}</b></td>
+          <td class="dcf-txt-center">{{form.temperatura(size=3,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.temperatura.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5><p class="text-danger">Información de etiqueta</p><h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.criteriodiagnostico.label}}</b></td>
+          <td class="dcf-txt-center">{{form.criteriodiagnostico(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.criteriodiagnostico.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.sugerenciasdiagnosticas.label}}</b></td>
+          <td class="dcf-txt-center">{{form.sugerenciasdiagnosticas(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.sugerenciasdiagnosticas.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>
+        <tr>
+          <td class="dcf-txt-center"><b>{{form.motivoconsulta.label}}</b></td>
+          <td class="dcf-txt-center">{{form.motivoconsulta(size=32,class="form-control")}}</td>
+          <td class="dcf-txt-center">{% for error in form.motivoconsulta.errors %}
+            <span style="color:red;">
+                {{error}}
+            </span>
+            {% endfor %}</td>
+        </tr>    
+        </tbody>
+      </table>
+    </div>
+        <p>
+            <input type="submit" value="Guardar información" class="btn btn-success">
+        </p>
+    </form>
+    </center>
+</div>
+{% endblock %}

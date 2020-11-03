@@ -1,0 +1,42 @@
+{% extends '/medico/basemedico.html' %}
+
+
+{% block title %} Consulta de pacientes {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Registro de pacientes</h1>
+    <hr>
+	<p>Los pacientes registrados por usted aparecerán aquí</p>
+</div>
+<div class="container">
+    <div class="table-responsive-md">
+    <center>
+    <table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle" style="text-align: center;">Nombre</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Apellido Paterno</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Apellido Materno</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Sexo</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Edad</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            <td class="align-middle" style="text-align: center;">{{item[0]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[1]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[2]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[3]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[4]}}</td>
+        </tr><br>
+    {% endfor %}
+    </tbody>
+    </table>
+    </center>
+    </div>
+</div>
+
+{% endblock %}

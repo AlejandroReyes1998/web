@@ -1,0 +1,144 @@
+{% extends '/admin/baseadmin.html' %}
+{% block title %} Alta de médico {% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Registro de usuarios médicos</h1>
+    <hr>
+	<p>Por favor ingrese los datos de el médico a dar de alta en la plataforma</p>
+</div>
+
+<div class="container">
+  <center>
+	{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+       <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">X</span>
+        </button>
+             {{message}}
+    </div>
+    {% endfor  %}
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post" novalidate>
+    {{form.csrf_token}}
+<div class="dcf-overflow-x-auto">
+
+    <table class="dcf-table dcf-table-bordered dcf-table-striped">
+    <tbody>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Datos personales<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.nombre.label}}</b></td>
+            <td class="dcf-txt-center">{{form.nombre(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.nombre.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.apaterno.label}}</b></td>
+            <td class="dcf-txt-center">{{form.apaterno(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.apaterno.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.amaterno.label}}</b></td>
+            <td class="dcf-txt-center">{{form.amaterno(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.amaterno.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Datos de médico<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.correo.label}}</b></td>
+            <td class="dcf-txt-center">{{form.correo(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.correo.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.cedula.label}}</b></td>
+            <td class="dcf-txt-center">{{form.cedula(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.cedula.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.especialidad.label}}</b></td>
+            <td class="dcf-txt-center">{{form.especialidad(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.especialidad.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.ciudad.label}}</b></td>
+            <td class="dcf-txt-center">{{form.ciudad(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.ciudad.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Datos de usuario de plataforma de usuario<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.nombreUsuario.label}}</b></td>
+            <td class="dcf-txt-center">{{form.nombreUsuario(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.nombreUsuario.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.passwor_d.label}}</b></td>
+            <td class="dcf-txt-center">{{form.passwor_d(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.passwor_d.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.confirmpasswor_d.label}}</b></td>
+            <td class="dcf-txt-center">{{form.confirmpasswor_d(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.confirmpasswor_d.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+        <p>
+            <input type="submit" value="Dar de alta" class="btn btn-success">
+        </p>
+    </form>
+    </center>
+</div>
+{% endblock %}

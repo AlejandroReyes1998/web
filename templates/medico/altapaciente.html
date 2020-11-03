@@ -1,0 +1,113 @@
+{% extends '/medico/basemedico.html' %}
+{% block title %} Alta de pacientes {% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Registro de pacientes</h1>
+    <hr>
+	<p>Por favor ingrese los datos del paciente.</p>
+</div>
+<center>
+<div class="container">
+	{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+       <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">X</span>
+        </button>
+             {{message}}
+    </div>
+    {% endfor  %}
+    {% endif %}
+    {% endwith %}
+    <script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#loading").show();
+            $("#datos").hide();         
+        }
+    </script>
+    <form action="" method="post" novalidate> 
+      {{form.csrf_token}}
+    <div class="dcf-overflow-x-auto" id="datos">
+    <table class="dcf-table dcf-table-bordered dcf-table-striped">
+    <tbody>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Datos personales<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.nombre.label}}</b></td>
+            <td class="dcf-txt-center">{{form.nombre(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.nombre.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.apaterno.label}}</b></td>
+            <td class="dcf-txt-center">{{form.apaterno(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.apaterno.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.amaterno.label}}</b></td>
+            <td class="dcf-txt-center">{{form.amaterno(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.amaterno.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"></td>
+            <td class="dcf-txt-center"><h5>Datos de paciente<h5></td>
+            <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.sexo.label}}</b></td>
+            <td class="dcf-txt-center">{{form.sexo(size=1,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.sexo.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.edad.label}}</b></td>
+            <td class="dcf-txt-center">{{form.edad(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.edad.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
+        </tr>
+    </tbody>
+    </table>
+        <p>
+            <input type="submit" value="Dar de alta" class="btn btn-success" onclick="loading();">
+        </p>
+    </div>
+ 
+    </form>
+     </center>
+</div>
+<div class="container" id="loading">
+  <center>
+  <table>
+    <tbody>
+      <tr>
+        <td><img src="{{url_for('static', filename='loading.gif')}}" alt="load"></td>
+      </tr>
+      <tr>
+      <td><b>Generando llaves, favor de esperar un momento...</b></td>
+      </tr>
+    </tbody>
+  </table> 
+  </center>   
+</div>
+{% endblock %}
