@@ -1,0 +1,358 @@
+{% extends '/medico/basemedico.html' %}
+
+
+{% block title %} Consulta de Nota Médica {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Registro de notas médicas</h1>
+    <hr>
+	<p>Seleccione una nota médica para ser modificada</p>   
+</div>
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+       <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">X</span>
+        </button>
+             {{message}}
+    </div>
+    {% endfor  %}
+    {% endif %}
+    {% endwith %}
+<div class="container">
+    <div class="table-responsive-md">
+    <center>
+    <table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th class="align-middle" style="text-align: center;display:none;" scope="col">idnotamedica</th>
+            <th class="align-middle" style="text-align: center;display:none;" scope="col">idsignos</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Fecha de registro de nota</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Nombre</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Apellido Paterno</th>
+            <th scope="col" class="align-middle" style="text-align: center;">Apellido Materno</th>
+            <th scope="col" class="align-middle" style="text-align: center;"></th>
+            <th scope="col" class="align-middle" style="text-align: center;">Opciones</th>
+            <th scope="col" class="align-middle" style="text-align: center;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            <td class="align-middle" style="text-align: center;display:none;">{{item[5]}}</td>
+            <td class="align-middle" style="text-align: center;display:none;">{{item[6]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[0]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[1]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[2]}}</td>
+            <td class="align-middle" style="text-align: center;">{{item[3]}}</td>
+            <td class="align-middle" style="text-align: center;">
+                <a href="/notequery/{{item[5]}}/{{item[6]}}" class="btn btn-success btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modalNota{{item[5]}}{{item[6]}}">Ver Nota</a>  
+            </td>
+            <td class="align-middle" style="text-align: center;">
+                <a href="/notequery/{{item[5]}}/{{item[6]}}" class="btn btn-info btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modalNotaInfo{{item[5]}}{{item[6]}}">Modificar información de nota</a>
+            </td>
+            <td class="align-middle" style="text-align: center;">
+                <a href="/notequery/{{item[5]}}/{{item[6]}}" class="btn btn-dark btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modalNotaSignos{{item[5]}}{{item[6]}}">Modificar signos vitales</a>
+            </td>
+        </tr>
+        <div id="modalNota{{item[5]}}{{item[6]}}" class="modal fade bd-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Nota médica</h4>
+                                </div>
+                                <div class="modal-body" id="demo{{item[5]}}{{item[6]}}">
+                                    <script type="text/javascript">
+                                        $(document).ready(function(){
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "http://127.0.0.1:5000/medico/notequery/{{item[5]}}/{{item[6]}}",
+                                                //dataType: 'json',
+                                                success: function(data) {
+                                                    var total = JSON.stringify(data);
+                                                    console.log("This is the returned data: " + total);
+                                                    var obj = JSON.parse(total);
+                                                    console.log(obj);
+                                                    console.log("aocas " +obj[0].Fecha);
+                                                    document.getElementById("resumenInterrogatorio{{item[5]}}{{item[6]}}").value =obj[0].Resumen_Interrogatorio
+                                                    document.getElementById("planotratamiento{{item[5]}}{{item[6]}}").value = obj[0].Plan_Estudio
+                                                    document.getElementById("pronostico{{item[5]}}{{item[6]}}").value =obj[0].Pronostico
+                                                    document.getElementById("exploracion{{item[5]}}{{item[6]}}").value =obj[0].Exploracion_Fisica
+                                                    document.getElementById("resultado{{item[5]}}{{item[6]}}").value =obj[0].Resultados_Estudios
+                                                    document.getElementById("diagnostico{{item[5]}}{{item[6]}}").value =obj[0].Diagnostico_Problemas
+                                                    document.getElementById("edomental{{item[5]}}{{item[6]}}").value =obj[0].Estado_Mental
+                                                    document.getElementById("fecha{{item[5]}}{{item[6]}}").value =obj[0].Fecha
+                                                    document.getElementById("peso{{item[5]}}{{item[6]}}").value =obj[0].Peso
+                                                    document.getElementById("talla{{item[5]}}{{item[6]}}").value =obj[0].Talla
+                                                    document.getElementById("tension{{item[5]}}{{item[6]}}").value =obj[0].Presion
+                                                    document.getElementById("frecuenciaCardiaca{{item[5]}}{{item[6]}}").value =obj[0].Frecuencia_Cardiaca
+                                                    document.getElementById("frecuenciaRespiratoria{{item[5]}}{{item[6]}}").value =obj[0].Frecuencia_Respiratorio
+                                                    document.getElementById("temperatura{{item[5]}}{{item[6]}}").value =obj[0].Temperatura
+                                                },
+                                                error: function(error){
+                                                    console.log("Here is the error res: " + JSON.stringify(error));
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <div class="form-group">
+                                        <label class="text-info">Resumen Interrogatorio</label>
+                                        <textarea class="form-control" name="resumenInterrogatorio{{item[5]}}{{item[6]}}"
+                                        id="resumenInterrogatorio{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Plan o tratamiento</label>
+                                        <textarea class="form-control" name="planotratamiento{{item[5]}}{{item[6]}}"
+                                        id="planotratamiento{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Pronostico</label>
+                                        <textarea class="form-control" name="pronostico{{item[5]}}{{item[6]}}"
+                                        id="pronostico{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Exploración</label>
+                                        <textarea class="form-control" name="exploracion{{item[5]}}{{item[6]}}"
+                                        id="exploracion{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Resultado</label>
+                                        <textarea class="form-control" name="resultado{{item[5]}}{{item[6]}}"
+                                        id="resultado{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Diagnostico</label>
+                                        <textarea class="form-control" name="diagnostico{{item[5]}}{{item[6]}}"
+                                        id="diagnostico{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Estado Mental</label>
+                                        <textarea class="form-control" name="edomental{{item[5]}}{{item[6]}}"
+                                        id="edomental{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Fecha de elaboración</label>
+                                        <input type="text" class="form-control" name="fecha{{item[5]}}{{item[6]}}"
+                                        id="fecha{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Peso</label>
+                                        <input type="text" class="form-control" name="peso{{item[5]}}{{item[6]}}"
+                                        id="peso{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Talla</label>
+                                        <input type="text" class="form-control" name="talla{{item[5]}}{{item[6]}}"
+                                        id="talla{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tension</label>
+                                        <input type="text" class="form-control" name="tension{{item[5]}}{{item[6]}}"
+                                         id="tension{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Frecuencia cardiaca</label>
+                                        <input type="text" class="form-control" name="frecuenciaCardiaca{{item[5]}}{{item[6]}}"
+                                        id="frecuenciaCardiaca{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Frecuencia Respiratoria</label>
+                                        <input type="text" class="form-control" name="frecuenciaRespiratoria{{item[5]}}{{item[6]}}"
+                                        id="frecuenciaRespiratoria{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-dark">Temperatura</label>
+                                        <input type="text" class="form-control" name="temperatura{{item[5]}}{{item[6]}}" id="temperatura{{item[5]}}{{item[6]}}" disabled>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+        <div id="modalNotaInfo{{item[5]}}{{item[6]}}" class="modal fade bd-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Actualizar Nota médica</h4>
+                                </div>
+                                <div class="modal-body" id="demoNotaInfo{{item[5]}}{{item[6]}}">
+                                    <form action="{{url_for('notaInfo')}}" method="POST">
+                                    <script type="text/javascript">
+                                        $(document).ready(function(){
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "http://127.0.0.1:5000/medico/notequery/{{item[5]}}/{{item[6]}}",
+                                                //dataType: 'json',
+                                                success: function(data) {
+                                                    var total = JSON.stringify(data);
+                                                    console.log("This is the returned data: " + total);
+                                                    var obj = JSON.parse(total);
+                                                    console.log(obj);
+                                                    console.log("aocas " +obj[0].Fecha);
+                                                    document.getElementById("resumenInterrogatorioinfo{{item[5]}}{{item[6]}}").value =obj[0].Resumen_Interrogatorio
+                                                    document.getElementById("planotratamientoinfo{{item[5]}}{{item[6]}}").value = obj[0].Plan_Estudio
+                                                    document.getElementById("pronosticoinfo{{item[5]}}{{item[6]}}").value =obj[0].Pronostico
+                                                    document.getElementById("exploracioninfo{{item[5]}}{{item[6]}}").value =obj[0].Exploracion_Fisica
+                                                    document.getElementById("resultadoinfo{{item[5]}}{{item[6]}}").value =obj[0].Resultados_Estudios
+                                                    document.getElementById("diagnosticoinfo{{item[5]}}{{item[6]}}").value =obj[0].Diagnostico_Problemas
+                                                    document.getElementById("edomentalinfo{{item[5]}}{{item[6]}}").value =obj[0].Estado_Mental
+                                                    document.getElementById("fechainfo{{item[5]}}{{item[6]}}").value =obj[0].Fecha
+                                                },
+                                                error: function(error){
+                                                    console.log("Here is the error res: " + JSON.stringify(error));
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <div class="form-group">
+                                        <label class="text-info">Resumen Interrogatorio</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="resumenInterrogatorioinfo"
+                                        id="resumenInterrogatorioinfo{{item[5]}}{{item[6]}}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Plan o tratamiento</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="planotratamientoinfo"
+                                        id="planotratamientoinfo{{item[5]}}{{item[6]}}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Pronostico</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="pronosticoinfo"
+                                        id="pronosticoinfo{{item[5]}}{{item[6]}}"  rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Exploración</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="exploracioninfo"
+                                        id="exploracioninfo{{item[5]}}{{item[6]}}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Resultado</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="resultadoinfo"
+                                        id="resultadoinfo{{item[5]}}{{item[6]}}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Diagnostico</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="diagnosticoinfo"
+                                        id="diagnosticoinfo{{item[5]}}{{item[6]}}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Estado Mental</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <textarea class="form-control" name="edomentalinfo"
+                                        id="edomentalinfo{{item[5]}}{{item[6]}}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-info">Fecha de elaboración</label>
+                                        <input type="hidden"  name="id" value="{{item[5]}}">
+                                        <input type="text" class="form-control" name="fechainfo"
+                                        id="fechainfo{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                            <button class="btn btn-primary" type="submit">Actualizar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+                <div id="modalNotaSignos{{item[5]}}{{item[6]}}" class="modal fade bd-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Actualizar signos vitales</h4>
+                                </div>
+                                <div class="modal-body" id="demoSignos{{item[5]}}{{item[6]}}">
+                                    <form action="{{url_for('notaSignos')}}" method="POST">
+                                    <script type="text/javascript">
+                                        $(document).ready(function(){
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "http://127.0.0.1:5000/medico/notequery/{{item[5]}}/{{item[6]}}",
+                                                //dataType: 'json',
+                                                success: function(data) {
+                                                    var total = JSON.stringify(data);
+                                                    console.log("This is the returned data: " + total);
+                                                    var obj = JSON.parse(total);
+                                                    console.log(obj);
+                                                    console.log("aocas " +obj[0].Fecha);
+                                                    document.getElementById("pesosignos{{item[5]}}{{item[6]}}").value =obj[0].Peso
+                                                    document.getElementById("tallasignos{{item[5]}}{{item[6]}}").value =obj[0].Talla
+                                                    document.getElementById("tensionsignos{{item[5]}}{{item[6]}}").value =obj[0].Presion
+                                                    document.getElementById("frecuenciaCardiacasignos{{item[5]}}{{item[6]}}").value =obj[0].Frecuencia_Cardiaca
+                                                    document.getElementById("frecuenciaRespiratoriasignos{{item[5]}}{{item[6]}}").value =obj[0].Frecuencia_Respiratorio
+                                                    document.getElementById("temperaturasignos{{item[5]}}{{item[6]}}").value =obj[0].Temperatura
+                                                },
+                                                error: function(error){
+                                                    console.log("Here is the error res: " + JSON.stringify(error));
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <div class="form-group">
+                                        <label>Peso</label>
+                                        <input type="hidden"  name="id" value="{{item[6]}}">
+                                        <input type="text" class="form-control" name="pesosignos"
+                                        id="pesosignos{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Talla</label>
+                                        <input type="hidden"  name="id" value="{{item[6]}}">
+                                        <input type="text" class="form-control" name="tallasignos"
+                                        id="tallasignos{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tension</label>
+                                        <input type="hidden"  name="id" value="{{item[6]}}">
+                                        <input type="text" class="form-control" name="tensionsignos"
+                                         id="tensionsignos{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Frecuencia cardiaca</label>
+                                        <input type="hidden"  name="id" value="{{item[6]}}">
+                                        <input type="text" class="form-control" name="frecuenciaCardiacasignos"
+                                        id="frecuenciaCardiacasignos{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Frecuencia Respiratoria</label>
+                                        <input type="hidden"  name="id" value="{{item[6]}}">
+                                        <input type="text" class="form-control" name="frecuenciaRespiratoriasignos"
+                                        id="frecuenciaRespiratoriasignos{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="text-dark">Temperatura</label>
+                                        <input type="hidden"  name="id" value="{{item[6]}}">
+                                        <input type="text" class="form-control" name="temperaturasignos" id="temperaturasignos{{item[5]}}{{item[6]}}">
+                                    </div>
+                                    <div class="form-group">
+                                            <button class="btn btn-primary" type="submit">Actualizar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+    {% endfor %}
+    </tbody>
+    </table>
+    </center>
+    </div>
+</div>
+
+{% endblock %}

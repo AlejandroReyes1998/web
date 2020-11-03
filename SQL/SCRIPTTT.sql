@@ -38,7 +38,7 @@ create table Administrador (IDAdministrador int not null auto_increment,
                         IDUsuario int,
                         primary key(IDAdministrador));
 create table NotaMedica (IDNotaMedica int not null auto_increment,
-						Resumen_Interrogatorio NVARCHAR(280),
+			Resumen_Interrogatorio NVARCHAR(280),
                         Plan_Estudio NVARCHAR(280), 
                         Pronostico NVARCHAR(280), 
                         Exploracion_Fisica NVARCHAR(280), 
@@ -47,11 +47,11 @@ create table NotaMedica (IDNotaMedica int not null auto_increment,
                         Estado_Mental NVARCHAR(280),
                         Fecha NVARCHAR(10), 
                         IDPaciente int,
-						IDSignos int,
+			IDSignos int,
                         IDMedico int,
                         primary key(IDNotaMedica));
 create table Signos (IDSignos int not null auto_increment,
-						Peso int,
+			Peso int,
                         Talla int,
                         Presion NVARCHAR(15),
                         Frecuencia_Cardiaca NVARCHAR(15),
@@ -59,16 +59,16 @@ create table Signos (IDSignos int not null auto_increment,
                         Temperatura NVARCHAR(3),
                         primary key(IDSignos));
 #FOREIGN KEY RELATIONS
-ALTER TABLE Usuario ADD CONSTRAINT FK_PersonaUsuario FOREIGN KEY (IDPersona) REFERENCES Persona(IDPersona);
-ALTER TABLE Paciente ADD CONSTRAINT FK_PersonaPaciente FOREIGN KEY (IDPersona) REFERENCES Persona(IDPersona);
-ALTER TABLE Paciente ADD CONSTRAINT FK_MedicoPaciente FOREIGN KEY (IDMedico) REFERENCES Medico(IDMedico);
-ALTER TABLE Administrador ADD CONSTRAINT FK_UsuarioAdmin FOREIGN KEY (IDUsuario) REFERENCES Usuario(IDUsuario);
-ALTER TABLE Medico ADD CONSTRAINT FK_UsuarioMedico FOREIGN KEY (IDUsuario) REFERENCES Usuario(IDUsuario);
-ALTER TABLE NotaMedica ADD CONSTRAINT FK_MedicoNota FOREIGN KEY (IDMedico) REFERENCES Medico(IDMedico);
-ALTER TABLE NotaMedica ADD CONSTRAINT FK_PacienteNota FOREIGN KEY (IDPaciente) REFERENCES Paciente(IDPaciente);
-ALTER TABLE NotaMedica ADD CONSTRAINT FK_SignosNota FOREIGN KEY (IDSignos) REFERENCES Signos(IDSignos);
-alter table Usuario add foreign key (IDCatalogoUsuario) REFERENCES CatalogoUsuario(IDCatalogoUsuario);
-alter table Persona add foreign key (IDCatalogoPersona) REFERENCES CatalogoPersona(IDCatalogoPersona);
+ALTER TABLE Usuario ADD CONSTRAINT FK_PersonaUsuario FOREIGN KEY (IDPersona) REFERENCES Persona(IDPersona) on delete cascade;
+ALTER TABLE Paciente ADD CONSTRAINT FK_PersonaPaciente FOREIGN KEY (IDPersona) REFERENCES Persona(IDPersona) on delete cascade;
+ALTER TABLE Paciente ADD CONSTRAINT FK_MedicoPaciente FOREIGN KEY (IDMedico) REFERENCES Medico(IDMedico) on delete cascade;
+ALTER TABLE Administrador ADD CONSTRAINT FK_UsuarioAdmin FOREIGN KEY (IDUsuario) REFERENCES Usuario(IDUsuario) on delete cascade;
+ALTER TABLE Medico ADD CONSTRAINT FK_UsuarioMedico FOREIGN KEY (IDUsuario) REFERENCES Usuario(IDUsuario) on delete cascade;
+ALTER TABLE NotaMedica ADD CONSTRAINT FK_MedicoNota FOREIGN KEY (IDMedico) REFERENCES Medico(IDMedico) on delete cascade;
+ALTER TABLE NotaMedica ADD CONSTRAINT FK_PacienteNota FOREIGN KEY (IDPaciente) REFERENCES Paciente(IDPaciente) on delete cascade;
+ALTER TABLE NotaMedica ADD CONSTRAINT FK_SignosNota FOREIGN KEY (IDSignos) REFERENCES Signos(IDSignos) on delete cascade;
+alter table Usuario add foreign key (IDCatalogoUsuario) REFERENCES CatalogoUsuario(IDCatalogoUsuario) on delete cascade;
+alter table Persona add foreign key (IDCatalogoPersona) REFERENCES CatalogoPersona(IDCatalogoPersona) on delete cascade;
 -- catalogos
 insert into CatalogoPersona (IDCatalogoPersona,tipoPersona) values (1,"Usuario"),(2,"Persona");
 insert into CatalogoUsuario (IDCatalogoUsuario,tipoUsuario) values (1,"Administrador"),(2,"Medico");

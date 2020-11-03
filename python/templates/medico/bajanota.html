@@ -8,7 +8,7 @@
 <div class="container">
     <h1>Registro de notas médicas</h1>
     <hr>
-	<p>Seleccione una nota médica para ser desplegada.</p>
+	<p>Seleccione una nota médica para ser eliminada.</p>
     
 </div>
 <div class="container">
@@ -36,7 +36,8 @@
             <td class="align-middle" style="text-align: center;">{{item[2]}}</td>
             <td class="align-middle" style="text-align: center;">{{item[3]}}</td>
             <td class="align-middle" style="text-align: center;">
-                <a href="/notequery/{{item[5]}}/{{item[6]}}" class="btn btn-success btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modalNota{{item[5]}}{{item[6]}}">Seleccionar Nota</a>
+                <a href="/notequery/{{item[5]}}/{{item[6]}}" class="btn btn-success btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modalNota{{item[5]}}{{item[6]}}">Ver Nota</a>
+                <a href="/deletenota/{{item[5]}}/{{item[6]}}" class="btn btn-danger btn-xs" onclick="return confirm('¿Está seguro de eliminar este registro?')">Eliminar</a>
             </td>
         </tr>
         <div id="modalNota{{item[5]}}{{item[6]}}" class="modal fade bd-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -80,72 +81,72 @@
                                         });
                                     </script>
                                     <div class="form-group">
-                                        <label>Resumen Interrogatorio</label>
+                                        <label>Resumen Interrogatorio:</label>
                                         <textarea class="form-control" name="resumenInterrogatorio{{item[5]}}{{item[6]}}"
                                         id="resumenInterrogatorio{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Plan o tratamiento</label>
+                                        <label>Plan o tratamiento:</label>
                                         <textarea class="form-control" name="planotratamiento{{item[5]}}{{item[6]}}"
                                         id="planotratamiento{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Pronostico</label>
+                                        <label>Pronostico:</label>
                                         <textarea class="form-control" name="pronostico{{item[5]}}{{item[6]}}"
                                         id="pronostico{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Exploración</label>
+                                        <label>Exploración:</label>
                                         <textarea class="form-control" name="exploracion{{item[5]}}{{item[6]}}"
                                         id="exploracion{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Resultado</label>
+                                        <label>Resultado:</label>
                                         <textarea class="form-control" name="resultado{{item[5]}}{{item[6]}}"
                                         id="resultado{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Diagnóstico</label>
+                                        <label>Diagnostico:</label>
                                         <textarea class="form-control" name="diagnostico{{item[5]}}{{item[6]}}"
                                         id="diagnostico{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Estado Mental</label>
+                                        <label>Estado Mental:</label>
                                         <textarea class="form-control" name="edomental{{item[5]}}{{item[6]}}"
                                         id="edomental{{item[5]}}{{item[6]}}" disabled rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Fecha de elaboración (DD/MM/AAAA)</label>
+                                        <label>Fecha de elaboración:</label>
                                         <input type="text" class="form-control" name="fecha{{item[5]}}{{item[6]}}"
                                         id="fecha{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Peso (KG)</label>
+                                        <label>Peso:</label>
                                         <input type="text" class="form-control" name="peso{{item[5]}}{{item[6]}}"
                                         id="peso{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Talla (CM)</label>
+                                        <label>Talla:</label>
                                         <input type="text" class="form-control" name="talla{{item[5]}}{{item[6]}}"
                                         id="talla{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Tensión (mm)</label>
+                                        <label>Tension:</label>
                                         <input type="text" class="form-control" name="tension{{item[5]}}{{item[6]}}"
                                          id="tension{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Frecuencia cardiaca (lat/min)</label>
+                                        <label>Frecuencia cardiaca:</label>
                                         <input type="text" class="form-control" name="frecuenciaCardiaca{{item[5]}}{{item[6]}}"
                                         id="frecuenciaCardiaca{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Frecuencia Respiratoria (por minuto)</label>
+                                        <label>Frecuencia Respiratoria:</label>
                                         <input type="text" class="form-control" name="frecuenciaRespiratoria{{item[5]}}{{item[6]}}"
                                         id="frecuenciaRespiratoria{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Temperatura (°C)</label>
+                                        <label>Temperatura:</label>
                                         <input type="text" class="form-control" name="temperatura{{item[5]}}{{item[6]}}" id="temperatura{{item[5]}}{{item[6]}}" disabled>
                                     </div>
                                 </div>

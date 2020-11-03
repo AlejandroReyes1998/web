@@ -139,6 +139,93 @@ class PatientInfo(UserMixin, db.Model):
 	def get_IDMedico(self):
 			return self.IDMedico
 
+#Nota Medica
+class NoteInfo(UserMixin, db.Model):
+	__tablename__ = 'NotaMedica'
+	IDNotaMedica = db.Column(db.Integer,primary_key=True)
+	Resumen_Interrogatorio = db.Column(db.String(280))
+	Plan_Estudio = db.Column(db.String(280))
+	Pronostico = db.Column(db.String(280))
+	Exploracion_Fisica = db.Column(db.String(280))
+	Resultados_Estudios = db.Column(db.String(280))
+	Diagnostico_Problemas = db.Column(db.String(280))
+	Estado_Mental = db.Column(db.String(280))
+	Fecha = db.Column(db.String(10))
+	IDPaciente = db.Column(db.Integer,unique=True)
+	IDSignos = db.Column(db.Integer,unique=True)
+	IDMedico = db.Column(db.Integer,unique=True)
+	def __init__(self,IDNotaMedica,Resumen_Interrogatorio,Plan_Estudio,Pronostico,Exploracion_Fisica,Resultados_Estudios,
+		Diagnostico_Problemas,Estado_Mental,Fecha,IDPaciente,IDSignos,IDMedico):
+			self.IDNotaMedica = IDNotaMedica
+			self.Resumen_Interrogatorio = Resumen_Interrogatorio
+			self.Plan_Estudio = Plan_Estudio
+			self.Pronostico = Pronostico
+			self.Exploracion_Fisica = Exploracion_Fisica
+			self.Resultados_Estudios = Resultados_Estudios
+			self.Diagnostico_Problemas = Diagnostico_Problemas
+			self.Estado_Mental = Estado_Mental
+			self.Fecha = Fecha
+			self.IDPaciente = IDPaciente
+			self.IDSignos = IDSignos
+			self.IDMedico = IDMedico
+	def get_id(self):
+			return self.IDPaciente     
+	def get_Resumen_Interrogatorio(self):
+			return self.Resumen_Interrogatorio
+	def get_Plan_Estudio(self):
+			return self.Plan_Estudio
+	def get_Pronostico(self):
+			return self.Pronostico
+	def get_Exploracion_Fisica(self):
+			return self.Exploracion_Fisica
+	def get_Resultados_Estudios(self):
+			return self.Resultados_Estudios
+	def get_Diagnostico_Problemas(self):
+			return self.Diagnostico_Problemas
+	def get_Estado_Mental(self):
+			return self.Estado_Mental
+	def get_Fecha(self):
+			return self.Fecha
+	def get_IDPaciente(self):
+			return self.idPaciente
+	def get_IDSignos(self):
+			return self.IDSignos
+	def get_IDMedico(self):
+			return self.IDMedico
+
+#Signos
+class SignInfo(UserMixin, db.Model):
+	__tablename__ = 'Signos'
+	IDSignos = db.Column(db.Integer,primary_key=True)
+	Peso  = db.Column(db.Integer)
+	Talla = db.Column(db.Integer)
+	Presion = db.Column(db.String(15))
+	Frecuencia_Cardiaca = db.Column(db.String(15))
+	Frecuencia_Respiratorio = db.Column(db.String(15))
+	Temperatura = db.Column(db.String(3))
+	def __init__(self,IDSignos,Peso,Talla,Presion,Frecuencia_Cardiaca,Frecuencia_Respiratorio,Temperatura):
+			self.IDSignos = IDSignos
+			self.Peso = Peso
+			self.Talla = Talla
+			self.Presion = Presion
+			self.Frecuencia_Cardiaca = Frecuencia_Cardiaca
+			self.Frecuencia_Respiratorio = Frecuencia_Respiratorio
+			self.Temperatura = Temperatura
+	def get_id(self):
+			return self.IDSignos    
+	def get_Peso(self):
+			return self.Peso
+	def get_Talla(self):
+			return self.Talla
+	def get_Presion(self):
+			return self.Presion
+	def get_Frecuencia_Cardiaca(self):
+			return self.Frecuencia_Cardiaca
+	def get_Frecuencia_Respiratorio(self):
+			return self.Frecuencia_Respiratorio
+	def get_Temperatura(self):
+			return self.Temperatura
+
 def encrypt_string(hash_string):
 	sha_signature = \
 		hashlib.sha256(hash_string.encode()).hexdigest()
@@ -268,10 +355,10 @@ def deleteMedico(idPersona,idUsuario,idMedico):
 		#print(dataPersona+"."+dataUsuario+"."+dataMedico)
 		db.session.delete(dataMedico)
 		db.session.commit()
-		db.session.delete(dataUsuario)
-		db.session.commit()
-		db.session.delete(dataPersona)
-		db.session.commit()
+		#db.session.delete(dataUsuario)
+		#db.session.commit()
+		#db.session.delete(dataPersona)
+		#db.session.commit()
 		flash("¡Registro eliminado!")
 		return redirect(url_for('bajamedico'))
 	else:
@@ -490,8 +577,8 @@ def deletePaciente(idPersona,idPaciente):
 		dataPaciente = PatientInfo.query.get(idPaciente)
 		db.session.delete(dataPaciente)
 		db.session.commit()
-		db.session.delete(dataPersona)
-		db.session.commit()
+		#db.session.delete(dataPersona)
+		#db.session.commit()
 		flash("¡Registro eliminado!")
 		return redirect(url_for('bajapaciente'))		
 	else:
@@ -617,7 +704,115 @@ def consultanotaregular(idPaciente):
 		cursor = connection.cursor()
 		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
 		data = cursor.fetchall()
-		return render_template('medico/consultanotaregular.html', data=data)
+		return render_template('medico/cambionota.html', data=data)
+	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/seleccionpacientenotabaja')
+@login_required
+def seleccionpacientenotabaja():
+	if(session['tipoUsuario']==2):
+		name = current_user.nombreUsuario
+		dbx = create_engine(conn_str, encoding='utf8')
+		connection = dbx.raw_connection()			
+		cursor = connection.cursor()
+		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
+		data = cursor.fetchall()
+		return render_template('medico/seleccionpacientenotabaja.html', name = name, data=data)
+	else:
+		return redirect(url_for('indexadmin'))
+
+
+@app.route('/medico/bajanota/<idPaciente>/', methods = ['GET', 'POST'])
+def bajanota(idPaciente):
+	if(session['tipoUsuario']==2):
+		name = current_user.nombreUsuario
+		session['idPaciente'] = idPaciente
+		dbx = create_engine(conn_str, encoding='utf8')
+		connection = dbx.raw_connection()			
+		cursor = connection.cursor()
+		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
+		data = cursor.fetchall()
+		return render_template('medico/bajanota.html', data=data)
+	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/deletenota/<IDNotaMedica>/<IDSignos>/', methods = ['GET', 'POST'])
+def deletenota(IDNotaMedica,IDSignos):
+	if(session['tipoUsuario']==2):
+		dataSignos = SignInfo.query.get(IDSignos)
+		dataNota = NoteInfo.query.get(IDNotaMedica)
+		db.session.delete(dataSignos)
+		db.session.commit()
+		#db.session.delete(dataNota)
+		#db.session.commit()
+		flash("¡Registro eliminado!")
+		return redirect(url_for('adminota'))		
+	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/seleccionpacientenotacambio')
+@login_required
+def seleccionpacientenotacambio():
+	if(session['tipoUsuario']==2):
+		name = current_user.nombreUsuario
+		dbx = create_engine(conn_str, encoding='utf8')
+		connection = dbx.raw_connection()			
+		cursor = connection.cursor()
+		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
+		data = cursor.fetchall()
+		return render_template('medico/seleccionpacientenotacambio.html', name = name, data=data)
+	else:
+		return redirect(url_for('indexadmin'))
+
+
+@app.route('/medico/cambionota/<idPaciente>/', methods = ['GET', 'POST'])
+def cambionota(idPaciente):
+	if(session['tipoUsuario']==2):
+		name = current_user.nombreUsuario
+		session['idPaciente'] = idPaciente
+		dbx = create_engine(conn_str, encoding='utf8')
+		connection = dbx.raw_connection()			
+		cursor = connection.cursor()
+		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
+		data = cursor.fetchall()
+		return render_template('medico/cambionota.html', data=data)
+	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/notaInfo', methods = ['GET', 'POST'])
+def notaInfo():
+	if(session['tipoUsuario']==2):
+		if request.method == 'POST':
+			my_data = NoteInfo.query.get(request.form.get('id'))
+			my_data.Resumen_Interrogatorio = request.form['resumenInterrogatorioinfo']
+			my_data.Plan_Estudio = request.form['planotratamientoinfo']
+			my_data.Pronostico = request.form['pronosticoinfo']
+			my_data.Exploracion_Fisica = request.form['exploracioninfo']
+			my_data.Resultados_Estudios = request.form['resultadoinfo']
+			my_data.Diagnostico_Problemas = request.form['diagnosticoinfo']
+			my_data.Estado_Mental = request.form['edomentalinfo']
+			my_data.Fecha = request.form['fechainfo']
+			db.session.commit()
+			flash("¡Registro actualizado!")
+			return redirect(url_for('adminota'))
+	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/notaSignos', methods = ['GET', 'POST'])
+def notaSignos():
+	if(session['tipoUsuario']==2):
+		if request.method == 'POST':
+			my_data = SignInfo.query.get(request.form.get('id'))
+			my_data.Peso = request.form['pesosignos']
+			my_data.Talla = request.form['tallasignos']
+			my_data.Presion = request.form['tensionsignos']
+			my_data.Frecuencia_Cardiaca = request.form['frecuenciaCardiacasignos']
+			my_data.Frecuencia_Respiratorio = request.form['frecuenciaRespiratoriasignos']
+			my_data.Temperatura = request.form['temperaturasignos']
+			db.session.commit()
+			flash("¡Registro actualizado!")
+			return redirect(url_for('adminota'))
 	else:
 		return redirect(url_for('indexadmin'))
 
