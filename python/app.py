@@ -895,6 +895,15 @@ def about():
 def creditos():
 	return render_template('credits.html')
 
+@app.route('/reddr')
+def reddr():
+	if(session['tipoUsuario']==2):
+		return redirect(url_for('indexmedico'))
+	elif(session['tipoUsuario']==1):
+		return redirect(url_for('indexadmin'))
+	else:
+		return redirect(url_for('Login'))
+
 #register route
 @app.route('/register' , methods = ['GET', 'POST'])
 def register():

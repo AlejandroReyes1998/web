@@ -76,17 +76,17 @@
 										<div class="form-group">
 											<label>Nombre:</label>
 											<input type="hidden"  name="id" value="{{item[8]}}">
-											<input type="text" class="form-control" name="nombre" value="{{item[0]}}">
+											<input type="text" class="form-control" name="nombre" value="{{item[0]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números en el nombre">
 										</div>
 										<div class="form-group">
 											<label>Apellido Paterno:</label>
 											<input type="hidden"  name="id" value="{{item[8]}}">
-											<input type="text" class="form-control" name="apaterno" value="{{item[1]}}">
+											<input type="text" class="form-control" name="apaterno" value="{{item[1]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números en el nombre">
 										</div>
 										<div class="form-group">
 											<label>Apellido Materno:</label>
 											<input type="hidden"  name="id" value="{{item[8]}}}">
-											<input type="text" class="form-control" name="amaterno" value="{{item[2]}}">
+											<input type="text" class="form-control" name="amaterno" value="{{item[2]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números en el nombre">
 										</div>
 										<div class="form-group">
 											<button class="btn btn-primary" type="submit">Actualizar</button>
@@ -111,7 +111,7 @@
 										<div class="form-group">
 											<label>Nombre de usuario:</label>
 											<input type="hidden"  name="id" value="{{item[9]}}">
-											<input type="text" class="form-control" name="username" value="{{item[7]}}">
+											<input type="text" class="form-control" name="username" value="{{item[7]}}" required>
 										</div>
 										<div class="form-group">
 											<button class="btn btn-primary" type="submit">Actualizar</button>
@@ -136,22 +136,22 @@
 										<div class="form-group">
 											<label>Cedula:</label>
 											<input type="hidden"  name="id" value="{{item[10]}}">
-											<input type="text" class="form-control" name="cedula" value="{{item[3]}}">
+											<input type="text" class="form-control" name="cedula" value="{{item[3]}}" required pattern="^[0-9]*$" title="No se admiten caracteres no numéricos">
 										</div>
 										<div class="form-group">
 											<label>Especialidad:</label>
 											<input type="hidden"  name="id" value="{{item[10]}}">
-											<input type="text" class="form-control" name="especialidad" value="{{item[4]}}">
+											<input type="text" class="form-control" name="especialidad" value="{{item[4]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números">
 										</div>
 										<div class="form-group">
 											<label>Email:</label>
 											<input type="hidden"  name="id" value="{{item[10]}}">
-											<input type="text" class="form-control" name="correo" value="{{item[5]}}">
+											<input type="text" class="form-control" name="correo" value="{{item[5]}}" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="El correo ingresado es inválido">
 										</div>
 										<div class="form-group">
 											<label>Ciudad:</label>
 											<input type="hidden"  name="id" value="{{item[10]}}">
-											<input type="text" class="form-control" name="ciudad" value="{{item[6]}}">
+											<input type="text" class="form-control" name="ciudad" value="{{item[6]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números">
 										</div>
 										<div class="form-group">
 											<button class="btn btn-primary" type="submit">Actualizar</button>

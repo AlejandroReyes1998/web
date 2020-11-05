@@ -66,17 +66,17 @@
 										<div class="form-group">
 											<label>Nombre:</label>
 											<input type="hidden"  name="id" value="{{item[5]}}">
-											<input type="text" class="form-control" name="nombre" value="{{item[0]}}">
+											<input type="text" class="form-control" name="nombre" value="{{item[0]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números en el nombre">
 										</div>
 										<div class="form-group">
 											<label>Apellido Paterno:</label>
 											<input type="hidden"  name="id" value="{{item[5]}}">
-											<input type="text" class="form-control" name="apaterno" value="{{item[1]}}">
+											<input type="text" class="form-control" name="apaterno" value="{{item[1]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números en el nombre">
 										</div>
 										<div class="form-group">
 											<label>Apellido Materno:</label>
 											<input type="hidden"  name="id" value="{{item[5]}}}">
-											<input type="text" class="form-control" name="amaterno" value="{{item[2]}}">
+											<input type="text" class="form-control" name="amaterno" value="{{item[2]}}" required pattern="^[a-zA-Z ]*$" title="No se admiten números en el nombre">
 										</div>
 										<div class="form-group">
 											<button class="btn btn-primary" type="submit">Actualizar</button>
@@ -110,7 +110,7 @@
 										<div class="form-group">
 											<label>Edad:</label>
 											<input type="hidden"  name="id" value="{{item[6]}}">
-											<input type="text" class="form-control" name="edad" value="{{item[4]}}">
+											<input type="text" class="form-control" name="edad" value="{{item[4]}}" required pattern="^[0-9]*$" title="No se admiten caracteres no numéricos">
 										</div>
 										<div class="form-group">
 											<button class="btn btn-primary" type="submit">Actualizar</button>
