@@ -38,6 +38,7 @@ create table Administrador (IDAdministrador int not null auto_increment,
                         IDUsuario int,
                         primary key(IDAdministrador));
 create table NotaMedica (IDNotaMedica int not null auto_increment,
+                        iv BLOB,
 			Resumen_Interrogatorio NVARCHAR(280),
                         Plan_Estudio NVARCHAR(280), 
                         Pronostico NVARCHAR(280), 
@@ -79,6 +80,7 @@ insert into Usuario (nombreUsuario,passwor_d,IDPersona,IDCatalogoUsuario) values
 select * from Usuario;
 select * from Medico;
 select * from Persona;
+select * from Paciente;
 describe Usuario;
 #select idMedico from Medico where idUsuario = '8';
 USE NUEVADB;

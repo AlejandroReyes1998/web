@@ -6,9 +6,12 @@ from sqlalchemy import create_engine
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import LoginManager, UserMixin
 from flask_login import login_user, logout_user, current_user, login_required
+from flask_cors import CORS
+
 #from flask_user import roles_required
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Random import get_random_bytes
 import pymysql
 import hashlib
 """
@@ -24,7 +27,7 @@ conn_str = 'mysql+pymysql://root:''@localhost/nuevadb'
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_str
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+#CORS(app)
 #login code
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -143,6 +146,7 @@ class PatientInfo(UserMixin, db.Model):
 class NoteInfo(UserMixin, db.Model):
 	__tablename__ = 'NotaMedica'
 	IDNotaMedica = db.Column(db.Integer,primary_key=True)
+	iv = db.Column(db.LargeBinary)
 	Resumen_Interrogatorio = db.Column(db.String(280))
 	Plan_Estudio = db.Column(db.String(280))
 	Pronostico = db.Column(db.String(280))
@@ -154,9 +158,10 @@ class NoteInfo(UserMixin, db.Model):
 	IDPaciente = db.Column(db.Integer,unique=True)
 	IDSignos = db.Column(db.Integer,unique=True)
 	IDMedico = db.Column(db.Integer,unique=True)
-	def __init__(self,IDNotaMedica,Resumen_Interrogatorio,Plan_Estudio,Pronostico,Exploracion_Fisica,Resultados_Estudios,
+	def __init__(self,iv,IDNotaMedica,Resumen_Interrogatorio,Plan_Estudio,Pronostico,Exploracion_Fisica,Resultados_Estudios,
 		Diagnostico_Problemas,Estado_Mental,Fecha,IDPaciente,IDSignos,IDMedico):
 			self.IDNotaMedica = IDNotaMedica
+			self.iv = iv
 			self.Resumen_Interrogatorio = Resumen_Interrogatorio
 			self.Plan_Estudio = Plan_Estudio
 			self.Pronostico = Pronostico
@@ -169,7 +174,9 @@ class NoteInfo(UserMixin, db.Model):
 			self.IDSignos = IDSignos
 			self.IDMedico = IDMedico
 	def get_id(self):
-			return self.IDPaciente     
+			return self.IDPaciente
+	def get_iv(self):
+			return self.iv   
 	def get_Resumen_Interrogatorio(self):
 			return self.Resumen_Interrogatorio
 	def get_Plan_Estudio(self):
@@ -455,11 +462,13 @@ def altapaciente():
 		form = PatientForm()
 		name = current_user.nombreUsuario
 		if form.validate_on_submit():
+			#Datos de paciente
 			nombre = form.nombre.data
 			apaterno = form.apaterno.data
 			amaterno = form.amaterno.data
 			sexo = form.sexo.data
 			edad = form.edad.data
+			#Llave RSA
 			privateKeyName=apaterno+"_"+amaterno+"_"+nombre+'_private.pem'
 			publicKeyName=apaterno+"_"+amaterno+"_"+nombre+'_public.pem'
 			new_key = RSA.generate(2048, e=65537)
@@ -468,7 +477,7 @@ def altapaciente():
 			with open(privateKeyName,'wb') as privateKeyFile,open(publicKeyName,'wb') as publicKeyFile:
 				privateKeyFile.write(private_key)
 				publicKeyFile.write(public_key)
-			#try:
+			#Guardado en BD
 			dbx = create_engine(conn_str, encoding='utf8')
 			connection = dbx.raw_connection()			
 			cursor = connection.cursor()
@@ -633,12 +642,15 @@ def altanota(idPaciente):
 			criteriodiagnostico = form.criteriodiagnostico.data
 			sugerenciasdiagnosticas = form.sugerenciasdiagnosticas.data
 			motivoconsulta = form.motivoconsulta.data
+			#Vector de inicialización
+			iv=get_random_bytes(128)
+			#Guardado en base
 			try:
 				dbx = create_engine(conn_str, encoding='utf8')
 				connection = dbx.raw_connection()			
 				cursor = connection.cursor()
 				cursor.callproc('AltaNota', 
-					[resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
+					[iv,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
 					peso,talla,tension,frecuenciaCardiaca,frecuenciaRespiratoria,temperatura,session['idPaciente'],session['identificador']])
 				results = cursor.fetchone()
 				cursor.close()
@@ -704,7 +716,7 @@ def consultanotaregular(idPaciente):
 		cursor = connection.cursor()
 		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
 		data = cursor.fetchall()
-		return render_template('medico/cambionota.html', data=data)
+		return render_template('medico/consultanotaregular.html', data=data)
 	else:
 		return redirect(url_for('indexadmin'))
 
