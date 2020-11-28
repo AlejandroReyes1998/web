@@ -110,8 +110,8 @@ BEGIN
 		SELECT 'USUARIO Y PASSWORD ENCONTRADOS' AS MSJ;
     END IF;
 END //
-select * from paciente;
-select * from medico;
+#select * from Paciente;
+#select * from Medico;
 #drop procedure if exists Login;
 #CALL LOGIN('medicotest','medico');
 
