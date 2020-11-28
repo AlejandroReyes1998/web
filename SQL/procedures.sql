@@ -94,7 +94,7 @@ BEGIN
 	insert into Paciente (sexo,edad,PubK,IDPersona,IDMedico) values (sp_sexo,sp_edad,sp_PubK,(select MAX(idPersona) FROM Persona),sp_idMedico);
     SELECT 'REGISTRO EXITOSO' AS MSJ;
 END //
-
+DELIMITER ;
 drop procedure if exists Login;
 DELIMITER //
 CREATE PROCEDURE Login(
@@ -114,7 +114,7 @@ END //
 #select * from Medico;
 #drop procedure if exists Login;
 #CALL LOGIN('medicotest','medico');
-
+DELIMITER ;
 drop procedure if exists AltaNota;
 DELIMITER //
 CREATE PROCEDURE AltaNota(
