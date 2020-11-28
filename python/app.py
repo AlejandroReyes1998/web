@@ -643,7 +643,7 @@ def altanota(idPaciente):
 			sugerenciasdiagnosticas = form.sugerenciasdiagnosticas.data
 			motivoconsulta = form.motivoconsulta.data
 			#Vector de inicialización
-			iv=get_random_bytes(128)
+			iv=get_random_bytes(16)
 			#Guardado en base
 			try:
 				dbx = create_engine(conn_str, encoding='utf8')
