@@ -95,7 +95,7 @@ BEGIN
     SELECT 'REGISTRO EXITOSO' AS MSJ;
 END //
 
-drop´procedure if exists Login;
+drop procedure if exists Login;
 DELIMITER //
 CREATE PROCEDURE Login(
 	IN sp_username NVARCHAR(30),
