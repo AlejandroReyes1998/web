@@ -7,9 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import LoginManager, UserMixin
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_cors import CORS
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-import binascii
+
 #from flask_user import roles_required
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
@@ -34,8 +32,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'Login'
-
-
+			
+			
 
 #USUARIO
 class UserInfo(UserMixin, db.Model):
@@ -44,7 +42,7 @@ class UserInfo(UserMixin, db.Model):
 	nombreUsuario = db.Column(db.String(30))
 	passwor_d = db.Column(db.String(100))
 	IDPersona = db.Column(db.Integer,unique=True)
-	IDCatalogoUsuario = db.Column(db.Integer)
+	IDCatalogoUsuario = db.Column(db.Integer) 
 	def __init__(self,IDUsuario,nombreUsuario,password,IDPersona,IDCatalogoUsuario):
 			self.IDUsuario = IDUsuario
 			self.nombreUsuario = nombreUsuario
@@ -52,7 +50,7 @@ class UserInfo(UserMixin, db.Model):
 			self.IDPersona = IDPersona
 			self.IDCatalogoUsuario = IDCatalogoUsuario
 	def get_id(self):
-			return self.IDUsuario
+			return self.IDUsuario       
 	def get_username(self):
 			return self.nombreUsuario
 	def get_passwor_d(self):
@@ -77,7 +75,7 @@ class PersonInfo(UserMixin, db.Model):
 			self.amaterno = amaterno
 			self.IDCatalogoPersona = IDCatalogoPersona
 	def get_id(self):
-			return self.IDPersona
+			return self.IDPersona    
 	def get_nombre(self):
 			return self.nombre
 	def get_apaterno(self):
@@ -103,7 +101,7 @@ class MedicInfo(UserMixin, db.Model):
 			self.ciudad = ciudad
 			self.IDUsuario = IDUsuario
 	def get_id(self):
-			return self.IDMedico
+			return self.IDMedico    
 	def get_cedula(self):
 			return self.cedula
 	def get_correo(self):
@@ -132,7 +130,7 @@ class PatientInfo(UserMixin, db.Model):
 			self.IDPersona = IDPersona
 			self.IDMedico= IDMedico
 	def get_id(self):
-			return self.IDPaciente
+			return self.IDPaciente     
 	def get_edad(self):
 			return self.edad
 	def get_sexo(self):
@@ -178,7 +176,7 @@ class NoteInfo(UserMixin, db.Model):
 	def get_id(self):
 			return self.IDPaciente
 	def get_iv(self):
-			return self.iv
+			return self.iv   
 	def get_Resumen_Interrogatorio(self):
 			return self.Resumen_Interrogatorio
 	def get_Plan_Estudio(self):
@@ -221,7 +219,7 @@ class SignInfo(UserMixin, db.Model):
 			self.Frecuencia_Respiratorio = Frecuencia_Respiratorio
 			self.Temperatura = Temperatura
 	def get_id(self):
-			return self.IDSignos
+			return self.IDSignos    
 	def get_Peso(self):
 			return self.Peso
 	def get_Talla(self):
@@ -245,10 +243,10 @@ def read_file(filename):
 		photo = f.read()
 	return photo
 
-@app.errorhandler(404)
-def not_found(e):
-# defining function
-  return render_template("404.html")
+@app.errorhandler(404) 
+def not_found(e): 
+# defining function 
+  return render_template("404.html") 
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -293,13 +291,13 @@ def altamedico():
 			if(cpassword==form.passwor_d.data):
 				try:
 					dbx = create_engine(conn_str, encoding='utf8')
-					connection = dbx.raw_connection()
+					connection = dbx.raw_connection()			
 					cursor = connection.cursor()
 					cursor.callproc('AltaMedico', [nombre,apaterno,amaterno,nombreUsuario,passwor_d,cedula,correo,ciudad,especialidad])
 					results = cursor.fetchone()
 					cursor.close()
 					connection.commit()
-					connection.close()
+					connection.close() 
 					print(results)
 					if(results[0]=='REGISTRO EXITOSO'):
 						form.nombre.data = ""
@@ -320,11 +318,11 @@ def altamedico():
 					print(e)
 			else:
 				flash("Las contraseñas no coinciden, intente de nuevo.")
-
+				
 		return render_template('admin/altamedico.html', form=form)
 	else:
 		return redirect(url_for('indexmedico'))
-
+	
 
 @app.route('/admin/consultamedico')
 @login_required
@@ -332,14 +330,14 @@ def consultamedico():
 	if(session['tipoUsuario']==1):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_medico")
 		data = cursor.fetchall()
 		return render_template('admin/consultamedico.html', name = name, data=data)
 	else:
 		return redirect(url_for('indexmedico'))
-
+	
 
 @app.route('/admin/bajamedico')
 @login_required
@@ -347,7 +345,7 @@ def bajamedico():
 	if(session['tipoUsuario']==1):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_medico")
 		data = cursor.fetchall()
@@ -372,7 +370,7 @@ def deleteMedico(idPersona,idUsuario,idMedico):
 		return redirect(url_for('bajamedico'))
 	else:
 		return redirect(url_for('indexmedico'))
-
+	
 
 @app.route('/admin/cambiomedico')
 @login_required
@@ -380,14 +378,14 @@ def cambiomedico():
 	if(session['tipoUsuario']==1):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_medico")
 		data = cursor.fetchall()
 		return render_template('admin/cambiomedico.html', name = name,data=data)
 	else:
 		return redirect(url_for('indexmedico'))
-
+	
 
 #this is our update route where we are going to update our employee
 @app.route('/admin/datosMedico', methods = ['GET', 'POST'])
@@ -404,7 +402,7 @@ def datosMedico():
 			return redirect(url_for('cambiomedico'))
 	else:
 		return redirect(url_for('indexmedico'))
-
+	
 
 #this is our update route where we are going to update our employee
 @app.route('/admin/datosPersona', methods = ['GET', 'POST'])
@@ -481,7 +479,7 @@ def altapaciente():
 				publicKeyFile.write(public_key)
 			#Guardado en BD
 			dbx = create_engine(conn_str, encoding='utf8')
-			connection = dbx.raw_connection()
+			connection = dbx.raw_connection()			
 			cursor = connection.cursor()
 			datakey = read_file(publicKeyName)
 			try:
@@ -490,7 +488,7 @@ def altapaciente():
 				results = cursor.fetchone()
 				cursor.close()
 				connection.commit()
-				connection.close()
+				connection.close() 
 				print(results)
 				if(results[0]=='REGISTRO EXITOSO'):
 					form.nombre.data = ""
@@ -502,11 +500,11 @@ def altapaciente():
 				else:
 					flash(results[0])
 			except Exception as e:
-				print(e)
-		return render_template('medico/altapaciente.html', form=form)
+				print(e)		
+		return render_template('medico/altapaciente.html', form=form)		
 	else:
 		return redirect(url_for('indexadmin'))
-
+		
 
 @app.route('/medico/consultapaciente')
 @login_required
@@ -514,7 +512,7 @@ def consultapaciente():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
@@ -529,7 +527,7 @@ def cambiopaciente():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
@@ -537,7 +535,7 @@ def cambiopaciente():
 
 	else:
 		return redirect(url_for('indexadmin'))
-
+	
 @app.route('/medico/datosPersonaPaciente', methods = ['GET', 'POST'])
 def datosPersonaPaciente():
 	if(session['tipoUsuario']==2):
@@ -572,14 +570,14 @@ def bajapaciente():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
 		return render_template('medico/bajapaciente.html', name = name,data=data)
 	else:
 		return redirect(url_for('indexadmin'))
-
+	
 
 @app.route('/medico/deletePaciente/<idPersona>/<idPaciente>/', methods = ['GET', 'POST'])
 def deletePaciente(idPersona,idPaciente):
@@ -591,10 +589,10 @@ def deletePaciente(idPersona,idPaciente):
 		#db.session.delete(dataPersona)
 		#db.session.commit()
 		flash("¡Registro eliminado!")
-		return redirect(url_for('bajapaciente'))
+		return redirect(url_for('bajapaciente'))		
 	else:
 		return redirect(url_for('indexadmin'))
-
+	
 @app.route('/medico/adminota')
 @login_required
 def adminota():
@@ -610,7 +608,7 @@ def seleccionpaciente():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
@@ -646,32 +644,19 @@ def altanota(idPaciente):
 			motivoconsulta = form.motivoconsulta.data
 			#Vector de inicialización
 			iv=get_random_bytes(16)
-			keyPair = RSA.generate(3072)
-			pubKey = keyPair.publickey()
-			pubKeyPEM = pubKey.exportKey()
-			privKeyPEM = keyPair.exportKey()
 			lea_k=get_random_bytes(16)
-			msg = lea_k
-			encryptor = PKCS1_OAEP.new(pubKey)
-			encrypted = encryptor.encrypt(msg)
-			# binascii.hexlify(encrypted)  -> a la base
-			#print("Encrypted: ", binascii.hexlify(encrypted))
-			#decryptor = PKCS1_OAEP.new(pubKey)
-			#decrypted = decryptor.decrypt(encrypted)  -> llave de lea descifrada
-
-
 			#Guardado en base
 			try:
 				dbx = create_engine(conn_str, encoding='utf8')
-				connection = dbx.raw_connection()
+				connection = dbx.raw_connection()			
 				cursor = connection.cursor()
-				cursor.callproc('AltaNota',
+				cursor.callproc('AltaNota', 
 					[iv,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
 					peso,talla,tension,frecuenciaCardiaca,frecuenciaRespiratoria,temperatura,session['idPaciente'],session['identificador']])
 				results = cursor.fetchone()
 				cursor.close()
 				connection.commit()
-				connection.close()
+				connection.close() 
 				print(results)
 				if(results[0]=='REGISTRO EXITOSO'):
 					form.resumenInterrogatorio.data=""
@@ -705,7 +690,7 @@ def altanota(idPaciente):
 		return render_template('medico/altanota.html', form = form)
 	else:
 		return redirect(url_for('indexadmin'))
-
+	
 
 @app.route('/medico/seleccionpacientenota')
 @login_required
@@ -713,7 +698,7 @@ def seleccionpacientenota():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
@@ -728,7 +713,7 @@ def consultanotaregular(idPaciente):
 		name = current_user.nombreUsuario
 		session['idPaciente'] = idPaciente
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
 		data = cursor.fetchall()
@@ -742,7 +727,7 @@ def seleccionpacientenotabaja():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
@@ -757,7 +742,7 @@ def bajanota(idPaciente):
 		name = current_user.nombreUsuario
 		session['idPaciente'] = idPaciente
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
 		data = cursor.fetchall()
@@ -775,7 +760,7 @@ def deletenota(IDNotaMedica,IDSignos):
 		#db.session.delete(dataNota)
 		#db.session.commit()
 		flash("¡Registro eliminado!")
-		return redirect(url_for('adminota'))
+		return redirect(url_for('adminota'))		
 	else:
 		return redirect(url_for('indexadmin'))
 
@@ -785,7 +770,7 @@ def seleccionpacientenotacambio():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
 		data = cursor.fetchall()
@@ -800,7 +785,7 @@ def cambionota(idPaciente):
 		name = current_user.nombreUsuario
 		session['idPaciente'] = idPaciente
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		cursor.execute("select * from buscar_nota where idPaciente="+str(session['idPaciente']))
 		data = cursor.fetchall()
@@ -849,7 +834,7 @@ def notaSignos():
 def notequery(IDNotaMedica,idSignos):
 	if(session['tipoUsuario']==2):
 		dbx = create_engine(conn_str, encoding='utf8')
-		connection = dbx.raw_connection()
+		connection = dbx.raw_connection()			
 		cursor = connection.cursor()
 		#print(str(IDNotaMedica))
 		#print(str(idSignos))
@@ -895,7 +880,7 @@ def Login():
 						return redirect(url_for('indexadmin'))
 					else:
 						dbx = create_engine(conn_str, encoding='utf8')
-						connection = dbx.raw_connection()
+						connection = dbx.raw_connection()			
 						cursor = connection.cursor()
 						cursor.execute("select idMedico from Medico where idUsuario ="+str(user.IDUsuario))
 						identifier = cursor.fetchone()
