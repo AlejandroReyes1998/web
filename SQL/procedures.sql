@@ -86,12 +86,13 @@ CREATE PROCEDURE AltaPaciente(
     IN sp_amaterno NVARCHAR(30),
     IN sp_sexo NVARCHAR(10),
     IN sp_edad int,
+    IN sp_CURP NVARCHAR(18),
 	IN sp_idMedico int,
     IN sp_PubK BLOB
 )
 BEGIN
 	insert into Persona (nombre,apaterno,amaterno,IDCatalogoPersona) values (sp_nombre,sp_apaterno,sp_amaterno,2);
-	insert into Paciente (sexo,edad,PubK,IDPersona,IDMedico) values (sp_sexo,sp_edad,sp_PubK,(select MAX(idPersona) FROM Persona),sp_idMedico);
+	insert into Paciente (sexo,edad,CURP,PubK,IDPersona,IDMedico) values (sp_sexo,sp_edad,sp_CURP,sp_PubK,(select MAX(idPersona) FROM Persona),sp_idMedico);
     SELECT 'REGISTRO EXITOSO' AS MSJ;
 END //
 DELIMITER ;

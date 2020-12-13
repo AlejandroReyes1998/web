@@ -12,7 +12,7 @@ INNER JOIN  Medico ON Usuario.idUsuario = Medico.idUsuario;
 select * from medico_cedula;
 drop view  if exists datos_paciente;
 create view datos_paciente as select Persona.nombre,Persona.apaterno,Persona.amaterno,
-Paciente.sexo, Paciente.edad, Persona.idPersona,Paciente.idPaciente,Paciente.idMedico FROM Persona INNER JOIN Paciente ON Persona.idPersona = Paciente.idPersona;
+Paciente.sexo, Paciente.edad, Persona.idPersona,Paciente.idPaciente,Paciente.idMedico,Paciente.CURP FROM Persona INNER JOIN Paciente ON Persona.idPersona = Paciente.idPersona;
 select * from datos_paciente where idMedico = 1;
 drop view if exists buscar_nota;
 create view buscar_nota as select 

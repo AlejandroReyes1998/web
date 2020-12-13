@@ -33,8 +33,17 @@
     <tbody>
         <tr>
             <td class="dcf-txt-center"></td>
-            <td class="dcf-txt-center"><h5>Datos personales<h5></td>
+            <td class="dcf-txt-center"><h5>Formulario de alta<h5></td>
             <td class="dcf-txt-center"></td>
+        </tr>
+        <tr>
+            <td class="dcf-txt-center"><b>{{form.curp.label}}</b></td>
+            <td class="dcf-txt-center">{{form.curp(size=32,class="form-control")}}</td>
+            <td class="dcf-txt-center">{% for error in form.curp.errors %}
+          <span style="color:red;">
+              {{error}}
+          </span>
+          {% endfor %}</td>
         </tr>
         <tr>
             <td class="dcf-txt-center"><b>{{form.nombre.label}}</b></td>
@@ -62,11 +71,6 @@
               {{error}}
           </span>
           {% endfor %}</td>
-        </tr>
-        <tr>
-            <td class="dcf-txt-center"></td>
-            <td class="dcf-txt-center"><h5>Datos de paciente<h5></td>
-            <td class="dcf-txt-center"></td>
         </tr>
         <tr>
             <td class="dcf-txt-center"><b>{{form.sexo.label}}</b></td>

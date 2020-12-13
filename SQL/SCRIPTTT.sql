@@ -24,6 +24,7 @@ create table Paciente (IDPaciente int not null auto_increment,
 						edad int, 
                         sexo NVARCHAR(10),
                         PubK BLOB,
+                        CURP NVARCHAR(18),
                         IDPersona int,
                         IDMedico int,
                         primary key(IDPaciente));

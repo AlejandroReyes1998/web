@@ -121,14 +121,16 @@ class PatientInfo(UserMixin, db.Model):
 	IDPaciente = db.Column(db.Integer,primary_key=True)
 	edad = db.Column(db.Integer)
 	sexo = db.Column(db.String(10))
+	CURP = db.Column(db.String(18))
 	Pubk = db.Column(db.LargeBinary)
 	IDMedico = db.Column(db.Integer,unique=True)
 	IDPersona = db.Column(db.Integer,unique=True)
-	def __init__(self,IDPaciente,edad,sexo,Pubk,IDMedico,IDPersona):
+	def __init__(self,IDPaciente,edad,sexo,Pubk,CURP,IDMedico,IDPersona):
 			self.IDPaciente = IDPaciente
 			self.edad = edad
 			self.sexo = sexo
 			self.PubK = Pubk
+			self.CURP = CURP
 			self.IDPersona = IDPersona
 			self.IDMedico= IDMedico
 	def get_id(self):
@@ -137,6 +139,8 @@ class PatientInfo(UserMixin, db.Model):
 			return self.edad
 	def get_sexo(self):
 			return self.sexo
+	def get_CURP(self):
+			return self.CURP	
 	def get_PubK(self):
 			return self.PubK
 	def get_IDPersona(self):
@@ -468,6 +472,7 @@ def altapaciente():
 			nombre = form.nombre.data
 			apaterno = form.apaterno.data
 			amaterno = form.amaterno.data
+			curp = form.curp.data
 			sexo = form.sexo.data
 			edad = form.edad.data
 			#Llave RSA
@@ -486,7 +491,7 @@ def altapaciente():
 			datakey = read_file(publicKeyName)
 			try:
 			#Pubk = convertToBinaryData(publicKeyFile)
-				cursor.callproc('AltaPaciente', [nombre,apaterno,amaterno,sexo,int(edad),int(session['identificador']),datakey])
+				cursor.callproc('AltaPaciente', [nombre,apaterno,amaterno,sexo,int(edad),curp,int(session['identificador']),datakey])
 				results = cursor.fetchone()
 				cursor.close()
 				connection.commit()
@@ -497,6 +502,7 @@ def altapaciente():
 					form.apaterno.data = ""
 					form.amaterno.data = ""
 					form.edad.data = ""
+					form.curp.data = ""
 					flash("¡Registro dado de alta!, revise el archivo de llave privada correspondiente al usuario paciente.")
 					#print("¡Registro dado de alta!")
 				else:
@@ -546,6 +552,7 @@ def datosPersonaPaciente():
 			my_data.nombre = request.form['nombre']
 			my_data.apaterno = request.form['apaterno']
 			my_data.amaterno = request.form['amaterno']
+
 			db.session.commit()
 			flash("¡Registro actualizado!")
 			return redirect(url_for('cambiopaciente'))
@@ -560,6 +567,7 @@ def datosPaciente():
 			my_data = PatientInfo.query.get(request.form.get('id'))
 			my_data.sexo = request.form['sexo']
 			my_data.edad = request.form['edad']
+			my_data.CURP = request.form['curp']
 			db.session.commit()
 			flash("¡Registro actualizado!")
 			return redirect(url_for('cambiopaciente'))
