@@ -718,6 +718,11 @@ def altanota(idPaciente):
 					wrapper = lmw.lea_mfrc522_wrapper()
 					pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta 
 					wrapper.write_tag(pt, lea_k, iv)
+					# query llave publica
+					cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
+					pubKey = cursor.fetchone()
+					# cifra llave lea con llave publica 
+					
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
 				else:
 					flash(results[0])
