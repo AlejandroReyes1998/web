@@ -684,7 +684,7 @@ def altanota(idPaciente):
 				key_encrypted = encryptor.encrypt(msg)
 				cursor2 = connection.cursor()
 				cursor2.callproc('AltaNota',
-					[iv,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
+					[iv,key_encrypted,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
 					peso,talla,tension,frecuenciaCardiaca,frecuenciaRespiratoria,temperatura,session['idPaciente'],session['identificador']])
 				results = cursor2.fetchone()
 				cursor2.close()
@@ -719,10 +719,6 @@ def altanota(idPaciente):
 					wrapper = lmw.lea_mfrc522_wrapper()
 					pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta
 					wrapper.write_tag(pt, lea_k, iv)
-					# query llave publica
-					cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
-					pubKey = cursor.fetchone()
-					# cifra llave lea con llave publica
 
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
 				else:
