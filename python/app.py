@@ -144,7 +144,7 @@ class PatientInfo(UserMixin, db.Model):
 	def get_sexo(self):
 			return self.sexo
 	def get_CURP(self):
-			return self.CURP	
+			return self.CURP
 	def get_PubK(self):
 			return self.PubK
 	def get_IDPersona(self):
@@ -665,7 +665,6 @@ def altanota(idPaciente):
 			#Vector de inicialización
 			iv=get_random_bytes(16)
 			lea_k=get_random_bytes(16)
-			msg = lea_k
 			# binascii.hexlify(encrypted)  -> a la base
 			#print("Encrypted: ", binascii.hexlify(encrypted))
 			#decryptor = PKCS1_OAEP.new(pubKey)
@@ -681,7 +680,8 @@ def altanota(idPaciente):
 				#print(pubKey)
 				newk = RSA.importKey(pubKey[0])
 				encryptor = PKCS1_OAEP.new(newk)
-				encrypted = encryptor.encrypt(msg)
+				msg = lea_k
+				key_encrypted = encryptor.encrypt(msg)
 				cursor2 = connection.cursor()
 				cursor2.callproc('AltaNota',
 					[iv,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
@@ -709,6 +709,7 @@ def altanota(idPaciente):
 					form.frecuenciaRespiratoria.data=""
 					form.temperatura.data=""
 					#TAG
+					# kanye for president
 					form.criteriodiagnostico.data=""
 					form.sugerenciasdiagnosticas.data=""
 					form.motivoconsulta.data=""
@@ -716,8 +717,13 @@ def altanota(idPaciente):
 						AQUÍ ES DONDE VA LO DE BAJAR INFORMACIÓN A LA ETIQUETA
 					"""
 					wrapper = lmw.lea_mfrc522_wrapper()
-					pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta 
+					pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta
 					wrapper.write_tag(pt, lea_k, iv)
+					# query llave publica
+					cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
+					pubKey = cursor.fetchone()
+					# cifra llave lea con llave publica
+
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
 				else:
 					flash(results[0])
@@ -973,4 +979,3 @@ if __name__ == "__main__":
 
 	app.run(debug=True)
 	#app.run(host= '0.0.0.0', debug=True)
-
