@@ -709,6 +709,7 @@ def altanota(idPaciente):
 					form.frecuenciaRespiratoria.data=""
 					form.temperatura.data=""
 					#TAG
+					# kanye for president
 					form.criteriodiagnostico.data=""
 					form.sugerenciasdiagnosticas.data=""
 					form.motivoconsulta.data=""
