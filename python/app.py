@@ -896,6 +896,14 @@ def notequery(IDNotaMedica,idSignos):
 def readtag():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
+		if request.method == "POST":
+			curp = request.form["idCurp"]
+			dbx = create_engine(conn_str, encoding='utf8')
+			connection = dbx.raw_connection()
+			cursor = connection.cursor()
+			cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
+			data = cursor.fetchall()
+
 		return render_template('medico/readtag.html', name = name)
 	else:
 		return redirect(url_for('indexadmin'))
