@@ -40,6 +40,7 @@ create table Administrador (IDAdministrador int not null auto_increment,
                         primary key(IDAdministrador));
 create table NotaMedica (IDNotaMedica int not null auto_increment,
                         iv BLOB,
+                        lea_k BLOB,
 			Resumen_Interrogatorio NVARCHAR(280),
                         Plan_Estudio NVARCHAR(280), 
                         Pronostico NVARCHAR(280), 
