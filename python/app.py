@@ -25,6 +25,7 @@ import hashlib
 app  = Flask(__name__)
 app.config['SECRET_KEY'] = 'hardsecretkey'
 #SqlAlchemy Database Configuration With Mysql
+#conn_str = 'mysql+pymysql://root:thirtythree@localhost/nuevadb'
 conn_str = 'mysql+pymysql://root:''@localhost/nuevadb'
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_str
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -477,21 +478,27 @@ def altapaciente():
 			edad = form.edad.data
 			#Llave RSA
 			privateKeyName=apaterno+"_"+amaterno+"_"+nombre+'_private.pem'
-			publicKeyName=apaterno+"_"+amaterno+"_"+nombre+'_public.pem'
-			new_key = RSA.generate(2048, e=65537)
-			private_key = new_key.exportKey('PEM')
-			public_key = new_key.publickey().exportKey('PEM')
-			with open(privateKeyName,'wb') as privateKeyFile,open(publicKeyName,'wb') as publicKeyFile:
-				privateKeyFile.write(private_key)
-				publicKeyFile.write(public_key)
+			#publicKeyName=apaterno+"_"+amaterno+"_"+nombre+'_public.pem'
+			keyPair = RSA.generate(3072)
+			pubKey = keyPair.publickey()
+			pubKeyPEM = pubKey.exportKey('PEM')
+			privKeyPEM = keyPair.exportKey('PEM')
+			with open(privateKeyName,'wb') as privateKeyFile:
+				privateKeyFile.write(privKeyPEM)
+			# new_key = RSA.generate(2048, e=65537)
+			# private_key = new_key.exportKey('PEM')
+			# public_key = new_key.publickey().exportKey('PEM')
+			# with open(privateKeyName,'wb') as privateKeyFile,open(publicKeyName,'wb') as publicKeyFile:
+			# 	privateKeyFile.write(private_key)
+			# 	publicKeyFile.write(public_key)
 			#Guardado en BD
 			dbx = create_engine(conn_str, encoding='utf8')
 			connection = dbx.raw_connection()
 			cursor = connection.cursor()
-			datakey = read_file(publicKeyName)
+			#datakey = read_file(publicKeyName)
 			try:
 			#Pubk = convertToBinaryData(publicKeyFile)
-				cursor.callproc('AltaPaciente', [nombre,apaterno,amaterno,sexo,int(edad),curp,int(session['identificador']),datakey])
+				cursor.callproc('AltaPaciente', [nombre,apaterno,amaterno,sexo,int(edad),curp,int(session['identificador']),pubKeyPEM])
 				results = cursor.fetchone()
 				cursor.close()
 				connection.commit()
@@ -654,30 +661,30 @@ def altanota(idPaciente):
 			motivoconsulta = form.motivoconsulta.data
 			#Vector de inicialización
 			iv=get_random_bytes(16)
-			keyPair = RSA.generate(3072)
-			pubKey = keyPair.publickey()
-			pubKeyPEM = pubKey.exportKey()
-			privKeyPEM = keyPair.exportKey()
 			lea_k=get_random_bytes(16)
 			msg = lea_k
-			encryptor = PKCS1_OAEP.new(pubKey)
-			encrypted = encryptor.encrypt(msg)
 			# binascii.hexlify(encrypted)  -> a la base
 			#print("Encrypted: ", binascii.hexlify(encrypted))
 			#decryptor = PKCS1_OAEP.new(pubKey)
 			#decrypted = decryptor.decrypt(encrypted)  -> llave de lea descifrada
-
-
 			#Guardado en base
 			try:
 				dbx = create_engine(conn_str, encoding='utf8')
 				connection = dbx.raw_connection()
 				cursor = connection.cursor()
-				cursor.callproc('AltaNota',
+				cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
+				pubKey = cursor.fetchone()
+				cursor.close()
+				#print(pubKey)
+				newk = RSA.importKey(pubKey[0])
+				encryptor = PKCS1_OAEP.new(newk)
+				encrypted = encryptor.encrypt(msg)
+				cursor2 = connection.cursor()
+				cursor2.callproc('AltaNota',
 					[iv,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
 					peso,talla,tension,frecuenciaCardiaca,frecuenciaRespiratoria,temperatura,session['idPaciente'],session['identificador']])
-				results = cursor.fetchone()
-				cursor.close()
+				results = cursor2.fetchone()
+				cursor2.close()
 				connection.commit()
 				connection.close()
 				print(results)
@@ -958,3 +965,4 @@ def register():
 #run flask app
 if __name__ == "__main__":
 	app.run(debug=True)
+	#app.run(host= '0.0.0.0', debug=True)
