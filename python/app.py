@@ -684,7 +684,7 @@ def altanota(idPaciente):
 				key_encrypted = encryptor.encrypt(msg)
 				cursor2 = connection.cursor()
 				cursor2.callproc('AltaNota',
-					[iv,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
+					[iv,key_encrypted,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
 					peso,talla,tension,frecuenciaCardiaca,frecuenciaRespiratoria,temperatura,session['idPaciente'],session['identificador']])
 				results = cursor2.fetchone()
 				cursor2.close()
@@ -719,10 +719,6 @@ def altanota(idPaciente):
 					wrapper = lmw.lea_mfrc522_wrapper()
 					pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta
 					wrapper.write_tag(pt, lea_k, iv)
-					# query llave publica
-					cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
-					pubKey = cursor.fetchone()
-					# cifra llave lea con llave publica
 
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
 				else:
@@ -900,6 +896,14 @@ def notequery(IDNotaMedica,idSignos):
 def readtag():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
+		if request.method == "POST":
+			curp = request.form["idCurp"]
+			dbx = create_engine(conn_str, encoding='utf8')
+			connection = dbx.raw_connection()
+			cursor = connection.cursor()
+			cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
+			data = cursor.fetchall()
+
 		return render_template('medico/readtag.html', name = name)
 	else:
 		return redirect(url_for('indexadmin'))
