@@ -669,7 +669,7 @@ def altanota(idPaciente):
 			#Vector de inicialización
 			iv=get_random_bytes(16)
 			lea_k=get_random_bytes(16)
-			print("VECTORES GENERADOS")
+			#print("VECTORES GENERADOS")
 			# binascii.hexlify(encrypted)  -> a la base
 			#print("Encrypted: ", binascii.hexlify(encrypted))
 			#decryptor = PKCS1_OAEP.new(pubKey)
@@ -682,13 +682,13 @@ def altanota(idPaciente):
 				cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
 				pubKey = cursor.fetchone()
 				cursor.close()
-				print("LLAVE CIFRADA")
+				#print("LLAVE CIFRADA")
 				newk = RSA.importKey(pubKey[0])
 				encryptor = PKCS1_OAEP.new(newk)
 				msg = lea_k
 
 				key_encrypted = encryptor.encrypt(msg)
-				print("LLAVE CIFRADA")
+				#print("LLAVE CIFRADA")
 				cursor2 = connection.cursor()
 				cursor2.callproc('AltaNota',
 					[iv,key_encrypted,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,
