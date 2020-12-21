@@ -30,4 +30,7 @@ NotaMedica.Pronostico,NotaMedica.Exploracion_Fisica,NotaMedica.Resultados_Estudi
 NotaMedica.Fecha,Signos.Peso,Signos.Talla,Signos.Presion,Signos.Frecuencia_Cardiaca,Signos.Frecuencia_Respiratorio,Signos.Temperatura 
 from NotaMedica JOIN  Signos ON NotaMedica.idSignos = Signos.idSignos;
 select * from nota_paciente;
-
+drop view if exists nota_blob;
+create view nota_blob as select NotaMedica.IDNotaMedica,Paciente.idPaciente,NotaMedica.leak,NotaMedica.iv,NotaMedica.fecha 
+from NotaMedica inner join Paciente on Paciente.idPaciente = NotaMedica.idPaciente order by NotaMedica.fecha desc limit 1;
+select * from nota_blob;
