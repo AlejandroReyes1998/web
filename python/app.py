@@ -921,7 +921,7 @@ def selectkey(idPaciente):
 			f = request.files['file']
 			if f.filename == '':
 				flash("¡No se selecciono ningun archivo!")
-			else: 
+			else:
 				f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
 				name = current_user.nombreUsuario
 				dbx = create_engine(conn_str, encoding='utf8')
@@ -936,6 +936,10 @@ def selectkey(idPaciente):
 				private_key= RSA.importKey(llaveprivadafilecontent)
 				leaciphered= data[2]
 				iv = data[3]
+
+				decryptor = PKCS1_OAEP.new(private_key)
+				decrypted = decryptor.decrypt(leaciphered)
+				
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
