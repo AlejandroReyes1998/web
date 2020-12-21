@@ -75,7 +75,7 @@ BEGIN
 	UPDATE Medico set cedula=sp_cedula,correo=sp_correo,ciudad=sp_ciudad,especialidad=sp_especialidad where idMedico=sp_idMedico;
 END //
 DELIMITER ;
-#call AltaMedico('Almanaque','Trivino','FERNANDEZ','extra','innings',2020201,'a@b.com','Farmaceutirco','Benito Juarez');
+call AltaMedico('Almanaque','Trivino','FERNANDEZ','extra','innings',2020201,'a@b.com','Farmaceutirco','Benito Juarez');
 #select * from usuario;
 
 drop procedure if exists AltaPaciente;
@@ -128,7 +128,6 @@ CREATE PROCEDURE AltaNota(
 		IN sp_Resultados_Estudios NVARCHAR(280),
 		IN sp_Diagnostico_Problemas NVARCHAR(280),
 		IN sp_Estado_Mental NVARCHAR(280),
-		IN sp_Fecha NVARCHAR(10),
         IN sp_Peso int,
 		IN sp_Talla int,
 		IN sp_Presion NVARCHAR(15),
@@ -141,7 +140,7 @@ CREATE PROCEDURE AltaNota(
 BEGIN
 	insert into Signos (Peso,Talla,Presion,Frecuencia_Cardiaca,Frecuencia_Respiratorio,Temperatura)
     values (sp_Peso,sp_Talla,sp_Presion,sp_Frecuencia_Cardiaca,sp_Frecuencia_Respiratorio,sp_Temperatura);
-	insert into NotaMedica (iv,leak,Resumen_Interrogatorio,Plan_Estudio,Pronostico,Exploracion_Fisica,Resultados_Estudios,Diagnostico_Problemas,Estado_Mental,Fecha,IDPaciente,IDMedico,IDSignos) 
-    values (sp_iv,sp_leak,sp_Resumen_Interrogatorio,sp_Plan_Estudio,sp_Pronostico,sp_Exploracion_Fisica,sp_Resultados_Estudios,sp_Diagnostico_Problemas,sp_Estado_Mental,sp_Fecha,sp_IDPaciente,sp_IDMedico,(select MAX(idSignos) FROM Signos));
+	insert into NotaMedica (iv,leak,Resumen_Interrogatorio,Plan_Estudio,Pronostico,Exploracion_Fisica,Resultados_Estudios,Diagnostico_Problemas,Estado_Mental,IDPaciente,IDMedico,IDSignos) 
+    values (sp_iv,sp_leak,sp_Resumen_Interrogatorio,sp_Plan_Estudio,sp_Pronostico,sp_Exploracion_Fisica,sp_Resultados_Estudios,sp_Diagnostico_Problemas,sp_Estado_Mental,sp_IDPaciente,sp_IDMedico,(select MAX(idSignos) FROM Signos));
     SELECT 'REGISTRO EXITOSO' AS MSJ;
 END //

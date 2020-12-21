@@ -1,10 +1,11 @@
-import lea_mfrc522_wrapper as lmw
+#import lea_mfrc522_wrapper as lmw
 from flask import Flask, render_template, flash, request, redirect, url_for, session,jsonify
 from forms import LoginForm, RegistrationForm, MedicoForm, PatientForm, NoteForm
 import flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 from flask_login import LoginManager, UserMixin
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_cors import CORS
@@ -17,6 +18,7 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Random import get_random_bytes
 import pymysql
 import hashlib
+import os
 """
 	if(session['tipoUsuario']==2):
 	else:
@@ -24,7 +26,9 @@ import hashlib
 """
 #create the object of Flask
 app  = Flask(__name__)
+UPLOAD_FOLDER = 'files'
 app.config['SECRET_KEY'] = 'hardsecretkey'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #SqlAlchemy Database Configuration With Mysql
 
 #conn_str = 'mysql+pymysql://root:thirtythree@localhost/nuevadb'
@@ -650,7 +654,7 @@ def altanota(idPaciente):
 			resultado = form.resultado.data
 			diagnostico = form.diagnostico.data
 			edomental = form.edomental.data
-			fecha= form.fecha.data
+			#fecha= form.fecha.data
 			#SIGNOS
 			peso = form.peso.data
 			talla = form.talla.data
@@ -665,6 +669,7 @@ def altanota(idPaciente):
 			#Vector de inicialización
 			iv=get_random_bytes(16)
 			lea_k=get_random_bytes(16)
+			print("VECTORES GENERADOS")
 			# binascii.hexlify(encrypted)  -> a la base
 			#print("Encrypted: ", binascii.hexlify(encrypted))
 			#decryptor = PKCS1_OAEP.new(pubKey)
@@ -677,20 +682,22 @@ def altanota(idPaciente):
 				cursor.execute("select Pubk from Paciente where idPaciente="+str(session['idPaciente']))
 				pubKey = cursor.fetchone()
 				cursor.close()
-				#print(pubKey)
+				print("LLAVE CIFRADA")
 				newk = RSA.importKey(pubKey[0])
 				encryptor = PKCS1_OAEP.new(newk)
 				msg = lea_k
+
 				key_encrypted = encryptor.encrypt(msg)
+				print("LLAVE CIFRADA")
 				cursor2 = connection.cursor()
 				cursor2.callproc('AltaNota',
-					[iv,key_encrypted,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,fecha,
+					[iv,key_encrypted,resumenInterrogatorio,planotratamiento,pronostico,exploracion,resultado,diagnostico,edomental,
 					peso,talla,tension,frecuenciaCardiaca,frecuenciaRespiratoria,temperatura,session['idPaciente'],session['identificador']])
 				results = cursor2.fetchone()
 				cursor2.close()
 				connection.commit()
 				connection.close()
-				print(results)
+				print("archivo GENERADO")
 				if(results[0]=='REGISTRO EXITOSO'):
 					form.resumenInterrogatorio.data=""
 					form.planotratamiento.data=""
@@ -700,7 +707,7 @@ def altanota(idPaciente):
 
 					form.diagnostico.data=""
 					form.edomental.data=""
-					form.fecha.data=""
+					#form.fecha.data=""
 					#SIGNOS
 					form.peso.data=""
 					form.talla.data=""
@@ -716,9 +723,9 @@ def altanota(idPaciente):
 					"""
 						AQUÍ ES DONDE VA LO DE BAJAR INFORMACIÓN A LA ETIQUETA
 					"""
-					wrapper = lmw.lea_mfrc522_wrapper()
-					pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta
-					wrapper.write_tag(pt, lea_k, iv)
+					#wrapper = lmw.lea_mfrc522_wrapper()
+					#pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta
+					#wrapper.write_tag(pt, lea_k, iv)
 
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
 				else:
@@ -896,17 +903,55 @@ def notequery(IDNotaMedica,idSignos):
 def readtag():
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
-		if request.method == "POST":
-			curp = request.form["idCurp"]
-			dbx = create_engine(conn_str, encoding='utf8')
-			connection = dbx.raw_connection()
-			cursor = connection.cursor()
-			cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
-			data = cursor.fetchall()
-
-		return render_template('medico/readtag.html', name = name)
+		dbx = create_engine(conn_str, encoding='utf8')
+		connection = dbx.raw_connection()
+		cursor = connection.cursor()
+		cursor.execute("select * from datos_paciente where idMedico="+str(session['identificador']))
+		data = cursor.fetchall()
+		return render_template('medico/readtag.html', name = name, data=data)
 	else:
 		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/selectkey/<idPaciente>/', methods = ['GET', 'POST'])
+def selectkey(idPaciente):
+	if(session['tipoUsuario']==2):
+		name = current_user.nombreUsuario
+		session['idPaciente'] = idPaciente
+		if request.method == 'POST':
+			f = request.files['file']
+			if f.filename == '':
+				flash("¡No se selecciono ningun archivo!")
+			else: 
+				f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
+				name = current_user.nombreUsuario
+				dbx = create_engine(conn_str, encoding='utf8')
+				connection = dbx.raw_connection()
+				cursor = connection.cursor()
+				cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
+				data = cursor.fetchone()
+				archivo = open("files/"+f.filename,"rb")
+				llaveprivadafilecontent= archivo.read()
+				archivo.close()
+				#print(data)
+				private_key= RSA.importKey(llaveprivadafilecontent)
+				leaciphered= data[2]
+				iv = data[3]
+				"""
+					Leer etiqueta y redirigir a showtag con la información de la misma
+				"""
+				return render_template('medico/showtag.html')
+		return render_template('medico/selectkey.html')
+	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/showtag')
+@login_required
+def showtag():
+	if(session['tipoUsuario']==2):
+		return render_template('medico/showtag.html')
+	else:
+		return redirect(url_for('indexadmin'))
+
 
 
 #login route

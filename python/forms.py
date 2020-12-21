@@ -40,7 +40,7 @@ class NoteForm(FlaskForm):
 	resultado = TextAreaField('Resultado de estudios', render_kw={"rows": 4, "cols": 30})
 	diagnostico = TextAreaField('Diagnostico/Problemas', render_kw={"rows": 4, "cols": 30})
 	edomental = TextAreaField('Estado mental', render_kw={"rows": 4, "cols": 30})
-	fecha= DateField('Fecha de registro (DD/MM/AAAA)',format='%d/%m/%Y', validators=[InputRequired(message="Este campo es obligatorio")])
+	#fecha= DateField('Fecha de registro (DD/MM/AAAA)',format='%d/%m/%Y', validators=[InputRequired(message="Este campo es obligatorio")])
 	#SIGNOS
 	peso = IntegerField('Peso (KG)', validators=[InputRequired(message="Este campo es obligatorio")])
 	talla = IntegerField('Talla (CM)', validators=[InputRequired(message="Este campo es obligatorio")])
