@@ -270,9 +270,8 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def index():
-	name = current_user.nombreUsuario
 	#return render_template('index.html', name = name)
-	return render_template('login.html', name = name)
+	return render_template('login.html')
 
 #admin
 @app.route('/admin/indexadmin')
@@ -942,6 +941,8 @@ def selectkey(idPaciente):
 
 				decryptor = PKCS1_OAEP.new(private_key)
 				decrypted = decryptor.decrypt(leaciphered)
+
+				print(decrypted)
 				
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
