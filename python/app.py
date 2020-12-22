@@ -499,6 +499,7 @@ def altapaciente():
 			# 	privateKeyFile.write(private_key)
 			# 	publicKeyFile.write(public_key)
 			#Guardado en BD
+			print(pubKeyPEM)
 			dbx = create_engine(conn_str, encoding='utf8')
 			connection = dbx.raw_connection()
 			cursor = connection.cursor()
@@ -683,6 +684,8 @@ def altanota(idPaciente):
 				pubKey = cursor.fetchone()
 				cursor.close()
 				#print("LLAVE CIFRADA")
+				print(pubKey[0])
+				
 				newk = RSA.importKey(pubKey[0])
 				encryptor = PKCS1_OAEP.new(newk)
 				msg = lea_k

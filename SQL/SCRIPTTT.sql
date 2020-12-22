@@ -27,7 +27,7 @@ create table Paciente (IDPaciente int not null auto_increment,
                         CURP NVARCHAR(18),
                         IDPersona int,
                         IDMedico int,
-                        primary key(IDPaciente));
+                        primary key(IDPaciente))Engine=InnoDB charset=utf8;
 create table Medico (IDMedico int not null auto_increment,
 						cedula int,
                         correo NVARCHAR(30),
@@ -52,7 +52,7 @@ create table NotaMedica (IDNotaMedica int not null auto_increment,
                         IDPaciente int,
 			IDSignos int,
                         IDMedico int,
-                        primary key(IDNotaMedica));
+                        primary key(IDNotaMedica))Engine=InnoDB charset=utf8;
 create table Signos (IDSignos int not null auto_increment,
 			Peso int,
                         Talla int,
