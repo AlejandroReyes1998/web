@@ -924,30 +924,39 @@ def selectkey(idPaciente):
 			if f.filename == '':
 				flash("¡No se selecciono ningun archivo!")
 			else:
-				f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
-				name = current_user.nombreUsuario
-				dbx = create_engine(conn_str, encoding='utf8')
-				connection = dbx.raw_connection()
-				cursor = connection.cursor()
-				cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
-				data = cursor.fetchone()
-				archivo = open("files/"+f.filename,"rb")
-				llaveprivadafilecontent= archivo.read()
-				archivo.close()
-				#print(data)
-				private_key= RSA.importKey(llaveprivadafilecontent)
-				leaciphered= data[2]
-				iv = data[3]
+				try:
+					f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
+					name = current_user.nombreUsuario
+					dbx = create_engine(conn_str, encoding='utf8')
+					connection = dbx.raw_connection()
+					cursor = connection.cursor()
+					cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
+					data = cursor.fetchone()
+					archivo = open("files/"+f.filename,"rb")
+					llaveprivadafilecontent= archivo.read()
+					archivo.close()
+					#print(data)
+					private_key= RSA.importKey(llaveprivadafilecontent)
+					leaciphered= data[2]
+					iv = data[3]
 
-				decryptor = PKCS1_OAEP.new(private_key)
-				decrypted = decryptor.decrypt(leaciphered)
+					decryptor = PKCS1_OAEP.new(private_key)
+					decrypted = decryptor.decrypt(leaciphered)
 
-				print(decrypted)
+					print(decrypted)
+
+					kanyewest = "into the wire"
+					bromomento = "bromomento"
+					urico = "muereurico"
+				except Exception as e:
+					flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
+					return redirect(url_for('indexmedico'))
+					print(e)
 				
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
-				return render_template('medico/showtag.html')
+				return render_template('medico/showtag.html',kanyewest=kanyewest,bromomento=bromomento,urico=urico)
 		return render_template('medico/selectkey.html')
 	else:
 		return redirect(url_for('indexadmin'))

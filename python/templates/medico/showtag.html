@@ -7,7 +7,29 @@
 	<p>Esta es la información contenida en su etiqueta</p>
 </div>
 <div class="container">
-  desplegar info
+	<center>
+     <div class="table-responsive-md">
+    
+    <table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle" style="text-align: center;">kanyewest</th>
+            <th scope="col" class="align-middle" style="text-align: center;">bromomento</th>
+            <th scope="col" class="align-middle" style="text-align: center;">urico</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="align-middle" style="text-align: center;">{{kanyewest}}</td>
+            <td class="align-middle" style="text-align: center;">{{bromomento}}</td>
+            <td class="align-middle" style="text-align: center;">{{urico}}</td>
+        </tr><br>
+    </tbody>
+    </table>
+    </div>
+    <br>	
+	<a href="{{url_for('indexmedico')}}"><button class="btn btn-success navbar-btn">Regresar</button> </a>
+    </center>
 </div>
 
 {% endblock %}
