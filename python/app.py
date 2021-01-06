@@ -859,7 +859,6 @@ def notaInfo():
 			my_data.Resultados_Estudios = request.form['resultadoinfo']
 			my_data.Diagnostico_Problemas = request.form['diagnosticoinfo']
 			my_data.Estado_Mental = request.form['edomentalinfo']
-			my_data.Fecha = request.form['fechainfo']
 			db.session.commit()
 			flash("¡Registro actualizado!")
 			return redirect(url_for('adminota'))
@@ -934,7 +933,7 @@ def selectkey(idPaciente):
 				criterio = ''
 				sugerencias = ''
 				motivo = ''
-				#try:
+			try:
 				f.save(os.path.join('/home/pi/web/python/files/',secure_filename(f.filename)))
 				name = current_user.nombreUsuario
 				dbx = create_engine(conn_str, encoding='utf8')
@@ -945,7 +944,8 @@ def selectkey(idPaciente):
 				archivo = open("/home/pi/web/python/files/"+f.filename,"rb")
 				llaveprivadafilecontent= archivo.read()
 				archivo.close()
-				#print(data)
+				os.remove("/home/pi/web/python/files/"+f.filename)
+
 				private_key= RSA.importKey(llaveprivadafilecontent)
 				leaciphered= data[2]
 				iv = data[3]
@@ -953,7 +953,7 @@ def selectkey(idPaciente):
 				decryptor = PKCS1_OAEP.new(private_key)
 				decrypted = decryptor.decrypt(leaciphered)
 
-				print(decrypted)
+				#print(decrypted)
 				wrapper = lmw.lea_mfrc522_wrapper()
 				raw_bytes = wrapper.read_tag(decrypted, iv)
 				criterio = raw_bytes[:480].decode('utf-8')
@@ -962,10 +962,10 @@ def selectkey(idPaciente):
 				print(criterio)
 				print(sugerencias)
 				print(motivo)
-				#except Exception as e:
-				#	flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
-				#	return redirect(url_for('indexmedico'))
-				#	print(e.value)
+			except Exception as e:
+				flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
+				return redirect(url_for('indexmedico'))
+				print(e.value)
 				
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
