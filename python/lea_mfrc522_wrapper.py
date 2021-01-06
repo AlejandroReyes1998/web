@@ -28,10 +28,9 @@ class lea_mfrc522_wrapper:
         return p
 
     # p is a <=768 byte long string
-    def write_tag(self, p, k, iv):
-        print(p)
+    def write_tag(self, pt, k, iv):
+        print(pt)
         cstring = bytearray()
-        pt = bytearray(p, 'utf-8')
         pl = 768 - len(pt)
         if pl > 0:
             for i in range(pl):

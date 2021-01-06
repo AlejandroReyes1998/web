@@ -1,4 +1,4 @@
-#import lea_mfrc522_wrapper as lmw
+import lea_mfrc522_wrapper as lmw
 from flask import Flask, render_template, flash, request, redirect, url_for, session,jsonify
 from forms import LoginForm, RegistrationForm, MedicoForm, PatientForm, NoteForm
 import flask_sqlalchemy
@@ -31,8 +31,8 @@ app.config['SECRET_KEY'] = 'hardsecretkey'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #SqlAlchemy Database Configuration With Mysql
 
-#conn_str = 'mysql+pymysql://root:thirtythree@localhost/nuevadb'
-conn_str = 'mysql+pymysql://root:''@localhost/nuevadb'
+conn_str = 'mysql+pymysql://root:thirtythree@localhost/nuevadb'
+#conn_str = 'mysql+pymysql://root:''@localhost/nuevadb'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_str
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -725,9 +725,16 @@ def altanota(idPaciente):
 					"""
 						AQUÍ ES DONDE VA LO DE BAJAR INFORMACIÓN A LA ETIQUETA
 					"""
-					#wrapper = lmw.lea_mfrc522_wrapper()
-					#pt = criteriodiagnostico + sugerenciasdiagnosticas + motivoconsulta
-					#wrapper.write_tag(pt, lea_k, iv)
+					pt = bytearray()
+					wrapper = lmw.lea_mfrc522_wrapper()
+					cbytes = bytearray(criteriodiagnostico.ljust(480, '\0'), 'utf-8')
+					sbytes = bytearray(sugerenciasdiagnosticas.ljust(140, '\0'), 'utf-8')
+					mbytes = bytearray(motivoconsulta.ljust(132, '\0'), 'utf-8')
+					pt.extend(cbytes)
+					pt.extend(sbytes)
+					pt.extend(mbytes)
+					print(pt)
+					wrapper.write_tag(pt, lea_k, iv)
 
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
 				else:
@@ -924,39 +931,46 @@ def selectkey(idPaciente):
 			if f.filename == '':
 				flash("¡No se selecciono ningun archivo!")
 			else:
-				try:
-					f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
-					name = current_user.nombreUsuario
-					dbx = create_engine(conn_str, encoding='utf8')
-					connection = dbx.raw_connection()
-					cursor = connection.cursor()
-					cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
-					data = cursor.fetchone()
-					archivo = open("files/"+f.filename,"rb")
-					llaveprivadafilecontent= archivo.read()
-					archivo.close()
-					#print(data)
-					private_key= RSA.importKey(llaveprivadafilecontent)
-					leaciphered= data[2]
-					iv = data[3]
+				criterio = ''
+				sugerencias = ''
+				motivo = ''
+				#try:
+				f.save(os.path.join('/home/pi/web/python/files/',secure_filename(f.filename)))
+				name = current_user.nombreUsuario
+				dbx = create_engine(conn_str, encoding='utf8')
+				connection = dbx.raw_connection()
+				cursor = connection.cursor()
+				cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
+				data = cursor.fetchone()
+				archivo = open("/home/pi/web/python/files/"+f.filename,"rb")
+				llaveprivadafilecontent= archivo.read()
+				archivo.close()
+				#print(data)
+				private_key= RSA.importKey(llaveprivadafilecontent)
+				leaciphered= data[2]
+				iv = data[3]
 
-					decryptor = PKCS1_OAEP.new(private_key)
-					decrypted = decryptor.decrypt(leaciphered)
+				decryptor = PKCS1_OAEP.new(private_key)
+				decrypted = decryptor.decrypt(leaciphered)
 
-					print(decrypted)
-
-					kanyewest = "into the wire"
-					bromomento = "bromomento"
-					urico = "muereurico"
-				except Exception as e:
-					flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
-					return redirect(url_for('indexmedico'))
-					print(e)
+				print(decrypted)
+				wrapper = lmw.lea_mfrc522_wrapper()
+				raw_bytes = wrapper.read_tag(decrypted, iv)
+				criterio = raw_bytes[:480].decode('utf-8')
+				sugerencias = raw_bytes[480:620].decode('utf-8')
+				motivo = raw_bytes[620:].decode('utf-8')
+				print(criterio)
+				print(sugerencias)
+				print(motivo)
+				#except Exception as e:
+				#	flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
+				#	return redirect(url_for('indexmedico'))
+				#	print(e.value)
 				
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
-				return render_template('medico/showtag.html',kanyewest=kanyewest,bromomento=bromomento,urico=urico)
+				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
 		return render_template('medico/selectkey.html')
 	else:
 		return redirect(url_for('indexadmin'))
@@ -1043,5 +1057,5 @@ def register():
 #run flask app
 if __name__ == "__main__":
 
-	app.run(debug=True)
-	#app.run(host= '0.0.0.0', debug=True)
+	#app.run(debug=True)
+	app.run(host= '0.0.0.0', debug=True)
