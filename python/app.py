@@ -944,7 +944,7 @@ def selectkey(idPaciente):
 				archivo = open("/home/pi/web/python/files/"+f.filename,"rb")
 				llaveprivadafilecontent= archivo.read()
 				archivo.close()
-				os.remove("/home/pi/web/python/files/"+f.filename)
+				#os.remove("/home/pi/web/python/files/"+f.filename)
 
 				private_key= RSA.importKey(llaveprivadafilecontent)
 				leaciphered= data[2]
@@ -962,6 +962,7 @@ def selectkey(idPaciente):
 				print(criterio)
 				print(sugerencias)
 				print(motivo)
+				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
 			except Exception as e:
 				flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
 				return redirect(url_for('indexmedico'))
@@ -970,7 +971,6 @@ def selectkey(idPaciente):
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
-				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
 		return render_template('medico/selectkey.html')
 	else:
 		return redirect(url_for('indexadmin'))
