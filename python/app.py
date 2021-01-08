@@ -964,6 +964,7 @@ def selectkey(idPaciente):
 				llaveprivadafilecontent= archivo.read()
 				archivo.close()
 				os.remove("'/home/pi/web/python/files/'"+f.filename)
+				#os.remove("/home/pi/web/python/files/"+f.filename)
 
 				private_key= RSA.importKey(llaveprivadafilecontent)
 				leaciphered= data[2]
@@ -990,7 +991,6 @@ def selectkey(idPaciente):
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
-				
 		return render_template('medico/selectkey.html')
 	else:
 		return redirect(url_for('indexadmin'))
