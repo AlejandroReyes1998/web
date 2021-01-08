@@ -1,4 +1,4 @@
-#import lea_mfrc522_wrapper as lmw
+import lea_mfrc522_wrapper as lmw
 from flask import Flask, render_template, flash, request, redirect, url_for, session,jsonify
 from forms import LoginForm, RegistrationForm, MedicoForm, PatientForm, NoteForm
 import flask_sqlalchemy
