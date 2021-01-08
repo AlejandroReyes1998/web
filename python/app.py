@@ -1,4 +1,4 @@
-import lea_mfrc522_wrapper as lmw
+#import lea_mfrc522_wrapper as lmw
 from flask import Flask, render_template, flash, request, redirect, url_for, session,jsonify
 from forms import LoginForm, RegistrationForm, MedicoForm, PatientForm, NoteForm
 import flask_sqlalchemy
@@ -271,7 +271,16 @@ def load_user(user_id):
 @login_required
 def index():
 	#return render_template('index.html', name = name)
-	return render_template('login.html')
+	try:
+		if(session['tipoUsuario']==2):
+			return redirect(url_for('indexmedico'))
+		elif(session['tipoUsuario']==1):
+			return redirect(url_for('indexadmin'))
+		else:
+			return redirect(url_for('Login'))
+	except Exception as e:
+		return redirect(url_for('Login'))
+
 
 #admin
 @app.route('/admin/indexadmin')
@@ -641,6 +650,7 @@ def seleccionpaciente():
 		return redirect(url_for('indexadmin'))
 
 @app.route('/medico/altanota/<idPaciente>/', methods = ['GET', 'POST'])
+@login_required
 def altanota(idPaciente):
 	if(session['tipoUsuario']==2):
 		form = NoteForm()
@@ -762,6 +772,7 @@ def seleccionpacientenota():
 
 
 @app.route('/medico/consultanotaregular/<idPaciente>/', methods = ['GET', 'POST'])
+@login_required
 def consultanotaregular(idPaciente):
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
@@ -791,6 +802,7 @@ def seleccionpacientenotabaja():
 
 
 @app.route('/medico/bajanota/<idPaciente>/', methods = ['GET', 'POST'])
+@login_required
 def bajanota(idPaciente):
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
@@ -805,6 +817,7 @@ def bajanota(idPaciente):
 		return redirect(url_for('indexadmin'))
 
 @app.route('/deletenota/<IDNotaMedica>/<IDSignos>/', methods = ['GET', 'POST'])
+@login_required
 def deletenota(IDNotaMedica,IDSignos):
 	if(session['tipoUsuario']==2):
 		dataSignos = SignInfo.query.get(IDSignos)
@@ -834,6 +847,7 @@ def seleccionpacientenotacambio():
 
 
 @app.route('/medico/cambionota/<idPaciente>/', methods = ['GET', 'POST'])
+@login_required
 def cambionota(idPaciente):
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
@@ -848,6 +862,7 @@ def cambionota(idPaciente):
 		return redirect(url_for('indexadmin'))
 
 @app.route('/medico/notaInfo', methods = ['GET', 'POST'])
+@login_required
 def notaInfo():
 	if(session['tipoUsuario']==2):
 		if request.method == 'POST':
@@ -866,6 +881,7 @@ def notaInfo():
 		return redirect(url_for('indexadmin'))
 
 @app.route('/medico/notaSignos', methods = ['GET', 'POST'])
+@login_required
 def notaSignos():
 	if(session['tipoUsuario']==2):
 		if request.method == 'POST':
@@ -884,6 +900,7 @@ def notaSignos():
 
 
 @app.route('/medico/notequery/<IDNotaMedica>/<idSignos>/', methods=['GET', 'POST'])
+@login_required
 def notequery(IDNotaMedica,idSignos):
 	if(session['tipoUsuario']==2):
 		dbx = create_engine(conn_str, encoding='utf8')
@@ -921,10 +938,12 @@ def readtag():
 		return redirect(url_for('indexadmin'))
 
 @app.route('/medico/selectkey/<idPaciente>/', methods = ['GET', 'POST'])
+@login_required
 def selectkey(idPaciente):
 	if(session['tipoUsuario']==2):
 		name = current_user.nombreUsuario
 		session['idPaciente'] = idPaciente
+
 		if request.method == 'POST':
 			f = request.files['file']
 			if f.filename == '':
@@ -941,10 +960,10 @@ def selectkey(idPaciente):
 				cursor = connection.cursor()
 				cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
 				data = cursor.fetchone()
-				archivo = open("/home/pi/web/python/files/"+f.filename,"rb")
+				archivo = open("files/"+f.filename,"rb")
 				llaveprivadafilecontent= archivo.read()
 				archivo.close()
-				os.remove("/home/pi/web/python/files/"+f.filename)
+				os.remove("'/home/pi/web/python/files/'"+f.filename)
 
 				private_key= RSA.importKey(llaveprivadafilecontent)
 				leaciphered= data[2]
@@ -962,6 +981,7 @@ def selectkey(idPaciente):
 				print(criterio)
 				print(sugerencias)
 				print(motivo)
+				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
 			except Exception as e:
 				flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
 				return redirect(url_for('indexmedico'))
@@ -970,7 +990,7 @@ def selectkey(idPaciente):
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
-				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
+				
 		return render_template('medico/selectkey.html')
 	else:
 		return redirect(url_for('indexadmin'))
@@ -1034,11 +1054,14 @@ def creditos():
 
 @app.route('/reddr')
 def reddr():
-	if(session['tipoUsuario']==2):
-		return redirect(url_for('indexmedico'))
-	elif(session['tipoUsuario']==1):
-		return redirect(url_for('indexadmin'))
-	else:
+	try:
+		if(session['tipoUsuario']==2):
+			return redirect(url_for('indexmedico'))
+		elif(session['tipoUsuario']==1):
+			return redirect(url_for('indexadmin'))
+		else:
+			return redirect(url_for('Login'))
+	except Exception as e:
 		return redirect(url_for('Login'))
 
 #register route
@@ -1060,7 +1083,7 @@ def register():
 if __name__ == "__main__":
 
 	#app.run(debug=True)
-	app.run(host= '0.0.0.0', debug=True)
-	app.run(debug=True)
 	#app.run(host= '0.0.0.0', debug=True)
+	#app.run(debug=True)
+	app.run(host= '0.0.0.0', debug=True)
  

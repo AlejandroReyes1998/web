@@ -36,6 +36,7 @@
 			            <th scope="col" class="align-middle" style="text-align: center;">Apellido Materno</th>
 			            <th scope="col" class="align-middle" style="text-align: center;">Sexo</th>
 			            <th scope="col" class="align-middle" style="text-align: center;">Edad</th>
+			            <th scope="col" class="align-middle" style="text-align: center;">CURP</th>
 			            <th scope="col" class="align-middle" style="text-align: center;">Opciones</th>
 					</tr>
 				</thead>
@@ -49,8 +50,9 @@
 				    	<td class="align-middle" style="text-align: center;"><p class="text-light">{{item[2]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[3]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[4]}}</p></td>
+				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[8]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;">
-				    		<a href="/datosPersona/{{item[5]}}" class="btn btn-light btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modaleditPersona{{item[5]}}">Modificar datos personales</a>
+				    		<a href="/datosPersona/{{item[5]}}" class="btn btn-light btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modaleditPersona{{item[5]}}">Modificar nombre</a>
 				    		<a href="/datosPaciente/{{item[6]}}" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modaleditPaciente{{item[6]}}">Modificar datos de paciente</a>
 				    	</td>
 					</tr>
