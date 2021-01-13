@@ -62,20 +62,51 @@ BEGIN
 	UPDATE Usuario set nombreUsuario=sp_username where idUsuario=sp_idUsuario;
 END //
 DELIMITER ;
-drop procedure if exists CambioMedico;
+
+drop procedure if exists CambioMedicoTotal;
 DELIMITER //
-CREATE PROCEDURE CambioMedico(
+CREATE PROCEDURE CambioMedicoTotal(
+	IN sp_nombre NVARCHAR(30),
+    IN sp_apaterno NVARCHAR(30),
+    IN sp_amaterno NVARCHAR(30),
+	IN sp_username NVARCHAR(30),
     IN sp_cedula NVARCHAR(30),
     IN sp_correo NVARCHAR(30),
     IN sp_ciudad NVARCHAR(30),
     IN sp_especialidad NVARCHAR(30),
-    IN sp_idMedico int
+    IN sp_idMedico int,
+	IN sp_idUsuario int,
+    IN sp_idPersona int
 )
 BEGIN
-	UPDATE Medico set cedula=sp_cedula,correo=sp_correo,ciudad=sp_ciudad,especialidad=sp_especialidad where idMedico=sp_idMedico;
+	declare existe_username int;
+    declare existe_cedula int;
+    declare existe_correo int;
+	set existe_username = (select count(*) from Usuario where nombreUsuario = sp_username and idUsuario <> sp_idUsuario);
+    set existe_cedula = (select count(*) from Medico where cedula = sp_cedula and idMedico <> sp_idMedico);
+    set existe_correo = (select count(*) from Medico where correo = sp_correo and idMedico <> sp_idMedico);
+    IF existe_username = 0 THEN
+		IF existe_cedula = 0 THEN
+			IF existe_correo = 0 THEN
+				UPDATE Medico set cedula=sp_cedula,correo=sp_correo,ciudad=sp_ciudad,especialidad=sp_especialidad where idMedico=sp_idMedico;
+                UPDATE Usuario set nombreUsuario=sp_username where idUsuario=sp_idUsuario;
+                UPDATE Persona set nombre=sp_nombre,apaterno=sp_apaterno,amaterno=sp_amaterno where idPersona=sp_idPersona;
+				SELECT 'Registro actualizado!' AS MSJ;
+			ELSE
+				SELECT 'El correo electrónico introducido ya se encuentra registrado.' AS MSJ;
+			END IF;
+		ELSE
+			SELECT 'La cédula introducida ya se encuentra registrada.' AS MSJ;
+		END IF;
+    ELSE
+		SELECT 'El nombre de usuario solicitado ya existe, favor de elegir otro.' AS MSJ;
+    END IF;
 END //
 DELIMITER ;
 call AltaMedico('Almanaque','Trivino','FERNANDEZ','extra','innings',2020201,'a@b.com','Farmaceutirco','Benito Juarez');
+call AltaMedico('Almanaquex','Trivinox','FERNANDEZx','extrax','innings',20202012,'a@bx.com','Farmaceutirco','Benito Juarez');
+call CambioMedicoTotal('Almanaque','Trivino','Gonzalez','extra',2020201,'a@b.com','Farmaceutirco','Benito Juarez',1,4,4);
+call CambioMedicoTotal('Almanaquex','Trivinox','FERNANDEZx','extrao',20202010,'a@bo.com','Farmaceutirco','Benito Juarez',2,5,5);
 #select * from usuario;
 
 drop procedure if exists AltaPaciente;
@@ -91,11 +122,43 @@ CREATE PROCEDURE AltaPaciente(
     IN sp_PubK BLOB
 )
 BEGIN
-	insert into Persona (nombre,apaterno,amaterno,IDCatalogoPersona) values (sp_nombre,sp_apaterno,sp_amaterno,2);
-	insert into Paciente (sexo,edad,CURP,PubK,IDPersona,IDMedico) values (sp_sexo,sp_edad,sp_CURP,sp_PubK,(select MAX(idPersona) FROM Persona),sp_idMedico);
-    SELECT 'REGISTRO EXITOSO' AS MSJ;
+	declare existe_curp int;
+	set existe_curp = (select count(*) from Paciente where CURP = sp_CURP);
+    if existe_curp = 0 then
+		insert into Persona (nombre,apaterno,amaterno,IDCatalogoPersona) values (sp_nombre,sp_apaterno,sp_amaterno,2);
+		insert into Paciente (sexo,edad,CURP,PubK,IDPersona,IDMedico) values (sp_sexo,sp_edad,sp_CURP,sp_PubK,(select MAX(idPersona) FROM Persona),sp_idMedico);
+		SELECT 'REGISTRO EXITOSO' AS MSJ;
+	else
+		SELECT 'La CURP introducida ya existe' AS MSJ;
+	END IF;
 END //
 DELIMITER ;
+
+drop procedure if exists CambioPacienteTotal;
+DELIMITER //
+CREATE PROCEDURE CambioPacienteTotal(
+	IN sp_nombre NVARCHAR(30),
+    IN sp_apaterno NVARCHAR(30),
+    IN sp_amaterno NVARCHAR(30),
+    IN sp_sexo NVARCHAR(10),
+    IN sp_edad int,
+    IN sp_CURP NVARCHAR(18),
+    IN sp_idPersona int,
+    IN sp_idPaciente int
+)
+BEGIN
+    declare existe_CURP int;
+	set existe_CURP = (select count(*) from Paciente where CURP = sp_CURP and idPaciente <> sp_idPaciente);
+    IF existe_CURP = 0 THEN
+			UPDATE Paciente set sexo=sp_sexo,edad=sp_edad,CURP=sp_CURP where idPaciente=sp_idPaciente;
+			UPDATE Persona set nombre=sp_nombre,apaterno=sp_apaterno,amaterno=sp_amaterno where idPersona=sp_idPersona;
+				SELECT 'Registro actualizado!' AS MSJ;
+		ELSE
+			SELECT 'La CURP introducida ya está registrada previamente' AS MSJ;
+	END IF;
+END //
+DELIMITER ;
+
 drop procedure if exists Login;
 DELIMITER //
 CREATE PROCEDURE Login(

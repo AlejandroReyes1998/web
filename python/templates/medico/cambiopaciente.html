@@ -45,17 +45,72 @@
 					<tr>
 						<td class="align-middle" style="text-align: center; display:none;">{{item[5]}}</td>
 						<td class="align-middle" style="text-align: center; display:none;">{{item[6]}}</td>
-					    <td class="align-middle" style="text-align: center;"><p class="text-light">{{item[0]}}</p></td>
-					    <td class="align-middle" style="text-align: center;"><p class="text-light">{{item[1]}}</p></td>
-				    	<td class="align-middle" style="text-align: center;"><p class="text-light">{{item[2]}}</p></td>
+					    <td class="align-middle" style="text-align: center;"><p class="text-info">{{item[0]}}</p></td>
+					    <td class="align-middle" style="text-align: center;"><p class="text-info">{{item[1]}}</p></td>
+				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[2]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[3]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[4]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;"><p class="text-info">{{item[8]}}</p></td>
 				    	<td class="align-middle" style="text-align: center;">
-				    		<a href="/datosPersona/{{item[5]}}" class="btn btn-light btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modaleditPersona{{item[5]}}">Modificar nombre</a>
-				    		<a href="/datosPaciente/{{item[6]}}" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modaleditPaciente{{item[6]}}">Modificar datos de paciente</a>
+				    		<a href="/datosPacienteCambio/{{item[5]}}{{item[6]}}" class="btn btn-light btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modaledit{{item[5]}}{{item[6]}}">Modificar datos</a>
+				    		<!--<a href="/datosPersona/{{item[5]}}" class="btn btn-light btn-xs" data-toggle="modal" data-toggle="modal" data-target="#modaleditPersona{{item[5]}}">Modificar nombre</a>
+				    		<a href="/datosPaciente/{{item[6]}}" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modaleditPaciente{{item[6]}}">Modificar datos de paciente</a>-->
 				    	</td>
 					</tr>
+					<!--todo-->
+					<div id="modaledit{{item[5]}}{{item[6]}}" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">Modificar información de paciente</h4>
+								</div>
+								<div class="modal-body">
+									<form action="{{url_for('datosPacienteCambio')}}" method="POST">
+										<div class="form-group">
+											<label>Nombre:</label>
+											<input type="hidden"  name="idPersona" value="{{item[5]}}">
+											<input type="text" class="form-control" name="nombre" value="{{item[0]}}" required pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$" title="No se admiten números ni caracteres especiales.">
+										</div>
+										<div class="form-group">
+											<label>Apellido Paterno:</label>
+											<input type="hidden"  name="idPersona" value="{{item[5]}}">
+											<input type="text" class="form-control" name="apaterno" value="{{item[1]}}" required pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$" title="No se admiten números ni caracteres especiales.">
+										</div>
+										<div class="form-group">
+											<label>Apellido Materno:</label>
+											<input type="hidden"  name="idPersona" value="{{item[5]}}}">
+											<input type="text" class="form-control" name="amaterno" value="{{item[2]}}" required pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$" title="No se admiten números ni caracteres especiales.">
+										</div>
+										<div class="form-group">
+											<label>CURP:</label>
+											<input type="hidden"  name="idPaciente" value="{{item[6]}}">
+											<input type="text" class="form-control" name="curp" value="{{item[8]}}" required pattern="^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$" title="No se admiten caracteres no numéricos">
+										</div>
+										<div class="form-group">
+											<label>Sexo:</label>
+											<input type="hidden" name="idPaciente" value="{{item[6]}}">
+											<select name="sexo" class="form-control">
+											  <option value="Masculino">Masculino</option>
+											  <option value="Femenino">Femenino</option>
+											  <option value="Indefinido">Indefinido</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label>Edad:</label>
+											<input type="hidden"  name="idPaciente" value="{{item[6]}}">
+											<input type="text" class="form-control" name="edad" value="{{item[4]}}" required pattern="^[0-9]*$" title="No se admiten caracteres no numéricos">
+										</div>
+										<div class="form-group">
+											<button class="btn btn-primary" type="submit" onclick="return confirm('¿Está seguro de Actualizar este registro?')">Actualizar</button>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+								</div>
+							</div>
+						</div>
+					</div>
 					<!--Persona-->
 					<div id="modaleditPersona{{item[5]}}" class="modal fade" role="dialog">
 						<div class="modal-dialog">
@@ -80,6 +135,7 @@
 											<input type="hidden"  name="id" value="{{item[5]}}}">
 											<input type="text" class="form-control" name="amaterno" value="{{item[2]}}" required pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$" title="No se admiten números ni caracteres especiales.">
 										</div>
+
 										<div class="form-group">
 											<button class="btn btn-primary" type="submit" onclick="return confirm('¿Está seguro de Actualizar este registro?')">Actualizar</button>
 										</div>

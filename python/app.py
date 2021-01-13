@@ -376,6 +376,7 @@ def bajamedico():
 		return redirect(url_for('indexmedico'))
 #This route is for deleting our employee
 @app.route('/admin/deleteMedico/<idPersona>/<idUsuario>/<idMedico>/', methods = ['GET', 'POST'])
+@login_required
 def deleteMedico(idPersona,idUsuario,idMedico):
 	if(session['tipoUsuario']==1):
 		dataPersona = PersonInfo.query.get(idPersona)
@@ -408,9 +409,43 @@ def cambiomedico():
 	else:
 		return redirect(url_for('indexmedico'))
 
+@app.route('/admin/datosMedicoCambio', methods = ['GET', 'POST'])
+@login_required
+def datosMedicoCambio():
+	if(session['tipoUsuario']==1):
+		if request.method == 'POST':
+			nombre = request.form['nombre']
+			apaterno = request.form['apaterno']
+			amaterno = request.form['amaterno']
+			correo = request.form['correo']
+			especialidad = request.form['especialidad']
+			ciudad = request.form['ciudad']
+			cedula = request.form['cedula']
+			nombreUsuario = request.form['username']
+			idUsuario=request.form['idUsuario']
+			idPersona=request.form['idPersona']
+			idMedico=request.form['idMedico']
+			try:
+				dbx = create_engine(conn_str, encoding='utf8')
+				connection = dbx.raw_connection()
+				cursor = connection.cursor()
+				cursor.callproc('CambioMedicoTotal', [nombre,apaterno,amaterno,nombreUsuario,cedula,correo,ciudad,especialidad,idMedico,idUsuario,idPersona])
+				results = cursor.fetchone()
+				cursor.close()
+				connection.commit()
+				connection.close()
+				print(results)
+				flash(results[0])
+			except Exception as e:
+				print(e)
+			return redirect(url_for('cambiomedico'))
+	else:
+		return redirect(url_for('indexmedico'))
+
 
 #this is our update route where we are going to update our employee
 @app.route('/admin/datosMedico', methods = ['GET', 'POST'])
+@login_required
 def datosMedico():
 	if(session['tipoUsuario']==1):
 		if request.method == 'POST':
@@ -425,9 +460,9 @@ def datosMedico():
 	else:
 		return redirect(url_for('indexmedico'))
 
-
 #this is our update route where we are going to update our employee
 @app.route('/admin/datosPersona', methods = ['GET', 'POST'])
+@login_required
 def datosPersona():
 	if(session['tipoUsuario']==1):
 		if request.method == 'POST':
@@ -444,6 +479,7 @@ def datosPersona():
 
 #this is our update route where we are going to update our employee
 @app.route('/admin/datosUsuario', methods = ['GET', 'POST'])
+@login_required
 def datosUsuario():
 	if(session['tipoUsuario']==1):
 		if request.method == 'POST':
@@ -530,6 +566,7 @@ def altapaciente():
 					#print("¡Registro dado de alta!")
 				else:
 					flash(results[0])
+					os.remove(privateKeyName)
 			except Exception as e:
 				print(e)
 		return render_template('medico/altapaciente.html', form=form)
@@ -565,6 +602,38 @@ def cambiopaciente():
 		return render_template('medico/cambiopaciente.html', name = name, data=data)
 
 	else:
+		return redirect(url_for('indexadmin'))
+
+@app.route('/medico/datosPacienteCambio', methods = ['GET', 'POST'])
+@login_required
+def datosPacienteCambio():
+	if(session['tipoUsuario']==2):
+		if request.method == 'POST':
+			nombre = request.form['nombre']
+			apaterno = request.form['apaterno']
+			amaterno = request.form['amaterno']
+			sexo = request.form['sexo']
+			edad = request.form['edad']
+			CURP = request.form['curp']
+			idPaciente=request.form['idPaciente']
+			idPersona=request.form['idPersona']
+			#idMedico=request.form['idMedico']
+			try:
+				dbx = create_engine(conn_str, encoding='utf8')
+				connection = dbx.raw_connection()
+				cursor = connection.cursor()
+				cursor.callproc('CambioPacienteTotal', [nombre,apaterno,amaterno,sexo,edad,CURP,idPersona,idPaciente])
+				results = cursor.fetchone()
+				cursor.close()
+				connection.commit()
+				connection.close()
+				print(results)
+				flash(results[0])
+			except Exception as e:
+				print(e)
+			return redirect(url_for('cambiopaciente'))
+	else:
+		print("hola")
 		return redirect(url_for('indexadmin'))
 
 @app.route('/medico/datosPersonaPaciente', methods = ['GET', 'POST'])
@@ -679,8 +748,8 @@ def altanota(idPaciente):
 			#Vector de inicialización
 			iv=get_random_bytes(16)
 			lea_k=get_random_bytes(16)
-			#print("VECTORES GENERADOS")
-			# binascii.hexlify(encrypted)  -> a la base
+			print("VECTORES GENERADOS")
+			#binascii.hexlify(encrypted)  -> a la base
 			#print("Encrypted: ", binascii.hexlify(encrypted))
 			#decryptor = PKCS1_OAEP.new(pubKey)
 			#decrypted = decryptor.decrypt(encrypted)  -> llave de lea descifrada
@@ -973,7 +1042,7 @@ def selectkey(idPaciente):
 				decryptor = PKCS1_OAEP.new(private_key)
 				decrypted = decryptor.decrypt(leaciphered)
 
-				#print(decrypted)
+				print(decrypted)
 				wrapper = lmw.lea_mfrc522_wrapper()
 				raw_bytes = wrapper.read_tag(decrypted, iv)
 				criterio = raw_bytes[:480].decode('utf-8')
@@ -1081,9 +1150,8 @@ def register():
 
 #run flask app
 if __name__ == "__main__":
-
-	#app.run(debug=True)
-	#app.run(host= '0.0.0.0', debug=True)
 	#app.run(debug=True)
 	app.run(host= '0.0.0.0', debug=True)
+	#app.run(debug=True)
+	#app.run(host= '0.0.0.0', debug=True)
  
