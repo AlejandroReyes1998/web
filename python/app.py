@@ -1061,7 +1061,12 @@ def selectkey(idPaciente):
 				print(str('\033[92m') + sugerencias + str('\033[0m'))
 				print(str('\033[92m') + motivo + str('\033[0m'))
 				print('**********end plain text**********')
-				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
+				dbx = create_engine(conn_str, encoding='utf8')
+				connection = dbx.raw_connection()
+				cursor = connection.cursor()
+				cursor.execute("select * from nota_paciente where IDNotaMedica="+str(data[0])+" and idSignos="+str(data[5]))
+				result = cursor.fetchone()
+				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo,result=result)
 			except Exception as e:
 				flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
 				return redirect(url_for('indexmedico'))

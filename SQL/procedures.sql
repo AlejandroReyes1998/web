@@ -104,9 +104,9 @@ BEGIN
 END //
 DELIMITER ;
 call AltaMedico('Almanaque','Trivino','FERNANDEZ','extra','innings',2020201,'a@b.com','Farmaceutirco','Benito Juarez');
-call AltaMedico('Almanaquex','Trivinox','FERNANDEZx','extrax','innings',20202012,'a@bx.com','Farmaceutirco','Benito Juarez');
-call CambioMedicoTotal('Almanaque','Trivino','Gonzalez','extra',2020201,'a@b.com','Farmaceutirco','Benito Juarez',1,4,4);
-call CambioMedicoTotal('Almanaquex','Trivinox','FERNANDEZx','extrao',20202010,'a@bo.com','Farmaceutirco','Benito Juarez',2,5,5);
+#call AltaMedico('Almanaquex','Trivinox','FERNANDEZx','extrax','innings',20202012,'a@bx.com','Farmaceutirco','Benito Juarez');
+#call CambioMedicoTotal('Almanaque','Trivino','Gonzalez','extra',2020201,'a@b.com','Farmaceutirco','Benito Juarez',1,4,4);
+#call CambioMedicoTotal('Almanaquex','Trivinox','FERNANDEZx','extrao',20202010,'a@bo.com','Farmaceutirco','Benito Juarez',2,5,5);
 #select * from usuario;
 
 drop procedure if exists AltaPaciente;

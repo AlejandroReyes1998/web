@@ -4,12 +4,11 @@
 <div class="container">
     <h1>Visualización de información</h1>
     <hr>
-	<p>Esta es la información contenida en su etiqueta</p>
 </div>
 <div class="container">
-	<center>
-     <div class="table-responsive-md">
-    
+    <center>
+    <h3>Esta es la información contenida en su etiqueta</h3>
+     <div class="table-responsive-md ">
     <table class="table">
     <thead class="thead-dark">
         <tr>
@@ -20,15 +19,81 @@
     </thead>
     <tbody>
         <tr>
-            <td id="criterio" class="align-middle" style="text-align: center;">{{kanyewest}}</td>
-            <td id="sugerencias" class="align-middle" style="text-align: center;">{{bromomento}}</td>
-            <td id="motivo" class="align-middle" style="text-align: center;">{{urico}}</td>
+            <td id="criterio" class="align-middle table-danger" style="text-align: center;">{{kanyewest}}</td>
+            <td id="sugerencias" class="align-middle table-danger" style="text-align: center;">{{bromomento}}</td>
+            <td id="motivo" class="align-middle table-danger" style="text-align: center;">{{urico}}</td>
         </tr><br>
     </tbody>
     </table>
     </div>
-    <br>	
-	<a href="{{url_for('indexmedico')}}"><button class="btn btn-success navbar-btn">Regresar</button> </a>
+    <br><br>
+    <h3>Esta es la nota médica asociada con la etiqueta leída.</h3>
+    <br><br>
+    <div class="table-responsive-sm table-bordered">
+    <table class="table">
+        <thead class="thead-dark">
+        <tbody>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Fecha</th>
+                  <td class="align-middle" style="text-align: center;">{{result[9]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Resumen de interrogatorio</th>
+                  <td class="align-middle" style="text-align: center;">{{result[2]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Plan de estudio/tratamiento</th>
+                  <td class="align-middle" style="text-align: center;">{{result[3]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Pronóstico</th>
+                  <td class="align-middle" style="text-align: center;">{{result[4]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Exploración física</th>
+                  <td class="align-middle" style="text-align: center;">{{result[5]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Exploración física</th>
+                  <td class="align-middle" style="text-align: center;">{{result[6]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Diagnostico/Problemas</th>
+                  <td class="align-middle" style="text-align: center;">{{result[7]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Estado Mental</th>
+                  <td class="align-middle" style="text-align: center;">{{result[8]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Peso</th>
+                  <td class="align-middle" style="text-align: center;">{{result[10]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Talla</th>
+                  <td class="align-middle" style="text-align: center;">{{result[11]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Presión</th>
+                  <td class="align-middle" style="text-align: center;">{{result[12]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Frecuencia Cardiaca</th>
+                  <td class="align-middle" style="text-align: center;">{{result[13]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Frecuencia Respiratoria</th>
+                  <td class="align-middle" style="text-align: center;">{{result[14]}}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle table-info" style="text-align: center;">Temperatura</th>
+                  <td class="align-middle" style="text-align: center;">{{result[15]}}</td>
+                </tr>
+        </tbody>
+    </table>
+    </div>
+    <a href="{{url_for('indexmedico')}}"><button class="btn btn-success navbar-btn">Regresar</button> </a>
+    <br><br>
     </center>
 </div>
 
