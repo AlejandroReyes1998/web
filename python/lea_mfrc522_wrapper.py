@@ -18,18 +18,22 @@ class lea_mfrc522_wrapper:
         print("place a tag near reader")
         (id, text) = self.ntag_rw.read()
         #print("text: %s" % (text))
+        print('**********ciphertext**********')
+        print(str('\033[96m') + str(text) + str('\033[0m'))
+        print('**********end ciphertext**********')
+        print(text)
         pb = self.spi_wrapper.cbc_lea_decrypt(self.spi_wrapper.fragment_text(text), k, iv)
         #print(pb)
         p = bytearray()
         for arr in pb:
             p.extend(arr)
         #print('raw pt:')
-        #print(p)
+        #print(str('\033[92m') + str(p) + str('\033[0m'))
         return p
 
     # p is a <=768 byte long string
     def write_tag(self, pt, k, iv):
-        print(pt)
+        #print(pt)
         cstring = bytearray()
         pl = 768 - len(pt)
         if pl > 0:
@@ -40,7 +44,9 @@ class lea_mfrc522_wrapper:
         for arr in c:
             cstring.extend(arr)
         print('ciphertext:')
-        #print(cstring)
+        print(str('\033[96m') + str(cstring) + str('\033[0m'))
+        print()
         print("place tag to write")
         self.ntag_rw.write(cstring)
-        print("Written")
+        print(str('\033[96m') + "Written" + str('\033[0m'))
+        print()

@@ -77,7 +77,7 @@ insert into CatalogoPersona (IDCatalogoPersona,tipoPersona) values (1,"Usuario")
 insert into CatalogoUsuario (IDCatalogoUsuario,tipoUsuario) values (1,"Administrador"),(2,"Medico");
 -- admins
 insert into Persona (nombre,apaterno,amaterno,IDCatalogoPersona) values ("Cesar Uriel","Hernandez","Castellanos",1),("Mauricio Joel","Martinez","Islas",1),("Alejandro","Reyes","Valenzuela",1);#,("Medico","Perez","TDYU",1)
-insert into Usuario (nombreUsuario,passwor_d,IDPersona,IDCatalogoUsuario) values ("CesarUrico",sha2("cesarurieladmin123",0),1,1),("Matrix",sha2("animel0v3r",0),2,1),("AlejandroR",sha2("JohnCena23231.1",0),3,1);#,("medicotest",sha2("medico",0),4,2)
+insert into Usuario (nombreUsuario,passwor_d,IDPersona,IDCatalogoUsuario) values ("CesarUrico",sha2("cesarurieladmin123",0),1,1),("Matrix",sha2("animel0v3r",0),2,1),("AlejandroR",sha2("JohnCena23231.1",0),3,1),("admindeprueba",sha2("prueba",0),4,1)
 -- pruebas
 select * from Usuario;
 select * from Medico;

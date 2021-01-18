@@ -521,9 +521,9 @@ def altapaciente():
 		name = current_user.nombreUsuario
 		if form.validate_on_submit():
 			#Datos de paciente
-			nombre = form.nombre.data
-			apaterno = form.apaterno.data
-			amaterno = form.amaterno.data
+			nombre = form.nombre.data.strip()
+			apaterno = form.apaterno.data.strip()
+			amaterno = form.amaterno.data.strip()
 			curp = form.curp.data
 			sexo = form.sexo.data
 			edad = form.edad.data
@@ -812,7 +812,15 @@ def altanota(idPaciente):
 					pt.extend(cbytes)
 					pt.extend(sbytes)
 					pt.extend(mbytes)
-					print(pt)
+					print('********texto plano********')
+					print(str('\033[96m') + str(pt) + str('\033[0m'))
+					print()
+					print('********fin texto plano********')
+					print('********llave LEA********')
+					print(str('\033[92m') + str(lea_k) + str('\033[0m'))
+					print()
+					print('********fin llave LEA********')
+						
 					wrapper.write_tag(pt, lea_k, iv)
 
 					flash("¡Registro dado de alta e información introducida en etiqueta!")
@@ -1029,10 +1037,10 @@ def selectkey(idPaciente):
 				cursor = connection.cursor()
 				cursor.execute("select * from nota_blob where idPaciente="+str(session['idPaciente']))
 				data = cursor.fetchone()
-				archivo = open("files/"+f.filename,"rb")
+				archivo = open("/home/pi/web/python/files/"+f.filename,"rb")
 				llaveprivadafilecontent= archivo.read()
 				archivo.close()
-				os.remove("'/home/pi/web/python/files/'"+f.filename)
+				#os.remove("'/home/pi/web/python/files/'"+f.filename)
 				#os.remove("/home/pi/web/python/files/"+f.filename)
 
 				private_key= RSA.importKey(llaveprivadafilecontent)
@@ -1048,15 +1056,16 @@ def selectkey(idPaciente):
 				criterio = raw_bytes[:480].decode('utf-8')
 				sugerencias = raw_bytes[480:620].decode('utf-8')
 				motivo = raw_bytes[620:].decode('utf-8')
-				print(criterio)
-				print(sugerencias)
-				print(motivo)
+				print('**********plain text**********')
+				print(str('\033[92m') + criterio + str('\033[0m'))
+				print(str('\033[92m') + sugerencias + str('\033[0m'))
+				print(str('\033[92m') + motivo + str('\033[0m'))
+				print('**********end plain text**********')
 				return render_template('medico/showtag.html',kanyewest=criterio,bromomento=sugerencias,urico=motivo)
 			except Exception as e:
 				flash("¡Ha ocurrido un error con la lectura de la etiqueta!")
 				return redirect(url_for('indexmedico'))
 				print(e.value)
-				
 				"""
 					Leer etiqueta y redirigir a showtag con la información de la misma
 				"""
@@ -1090,14 +1099,17 @@ def Login():
 						session['tipoUsuario']=user.IDCatalogoUsuario
 						return redirect(url_for('indexadmin'))
 					else:
-						dbx = create_engine(conn_str, encoding='utf8')
-						connection = dbx.raw_connection()
-						cursor = connection.cursor()
-						cursor.execute("select idMedico from Medico where idUsuario ="+str(user.IDUsuario))
-						identifier = cursor.fetchone()
-						session['identificador'] = identifier[0]
-						session['tipoUsuario']=user.IDCatalogoUsuario
-						return redirect(url_for('indexmedico'))
+						try:
+							dbx = create_engine(conn_str, encoding='utf8')
+							connection = dbx.raw_connection()
+							cursor = connection.cursor()
+							cursor.execute("select idMedico from Medico where idUsuario ="+str(user.IDUsuario))
+							identifier = cursor.fetchone()
+							session['identificador'] = identifier[0]
+							session['tipoUsuario']=user.IDCatalogoUsuario
+							return redirect(url_for('indexmedico'))
+						except Exception as e:
+							flash("Este usuario no está asociado con ninguna cuenta.")
 				else:
 					flash("Las credenciales de acceso son incorrectas. Intente de nuevo.")
 			else:
